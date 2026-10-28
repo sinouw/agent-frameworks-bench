@@ -1,25 +1,14 @@
 {
   "answer": {
     "model": "openai/gpt-oss-120b",
-    "pending_runs": [
-      "baseline:q31",
-      "baseline:h01",
-      "langgraph:h01",
-      "llamaindex:h01",
-      "baseline:h02",
-      "langgraph:h02",
-      "llamaindex:h02",
-      "baseline:h03",
-      "langgraph:h03",
-      "llamaindex:h03"
-    ],
-    "estimated_tokens": 185842
+    "pending_runs": [],
+    "estimated_tokens": 0
   },
   "judge": {
     "model": "qwen/qwen3.8-27b",
     "calls": 40,
-    "estimated_tokens": 136857,
-    "largest_request_tokens": 5898
+    "estimated_tokens": 105045,
+    "largest_request_tokens": 5938
   },
   "limits": {
     "daily_tokens_per_model": 200000,

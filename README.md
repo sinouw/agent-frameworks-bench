@@ -10,17 +10,18 @@ Corpus, chunks, embeddings, tools, prompt, LLM and eval suite are identical. Onl
 
 Versions: langchain 1.4.7, langgraph 1.2.18, langchain-qdrant 1.1.0, llama-index-core 0.14.25, llama-index-vector-stores-qdrant 0.10.4, openai 2.54.0, qdrant-client 1.20.0 (all pinned in `uv.lock`).
 
-> **Status (2026-10-28): end-to-end correctness and faithfulness are pending.** Groq's free tier caps each model at 200,000 tokens per rolling 24 hours, and this key is shared with other work. The judge model's daily window was already used up by other work, so no answer has been graded yet. The answer model ran out with 10 of the 14 eval questions answered by all three frameworks. For those 10 questions, the retrieval metrics, tool selection, citations, tokens, latency and cost below are complete. The judge pass and the remaining 4 questions are scheduled for 2026-10-29. Both passes resume where they stopped (`uv run afbench e2e && uv run afbench judge`). No correctness rate is shown until every answer in the set has been judged.
+> **Scope:** 14 end-to-end questions, one run per framework, graded by one judge model. A difference of one question is 7 points. Read the correctness column as "what went wrong, and why", not as a ranking. The retrieval eval (48 questions) is the larger sample.
 
 ## What I found
 
+- **Correctness came down to agent-loop behaviour, not retrieval or the model.** LlamaIndex answered 14 of 14 correctly, the baseline 13 and LangGraph 11. Faithfulness was 100% for all three. All three runs retrieved the same passages; the misses came from two places. On q27 ("what is the difference between the two limits?") the baseline and LangGraph stated 79 and 72 but never the difference; LlamaIndex did. LangGraph's other two misses are errors from its prebuilt agent, described below.
 - **On identical tool paths, the frameworks send almost the same tokens.** For the same question and the same tool calls, input tokens were within about 2%. LangChain's prompts are slightly smaller because it strips the `title` fields from the tool JSON schemas. LlamaIndex's are slightly larger because it adds `strict` and `additionalProperties` to them. On q01, for example: 2,093 / 2,115 / 2,151 input tokens for LangGraph / baseline / LlamaIndex. Bigger differences came from the model's own choices on a given run: on q21 the baseline searched twice, while the other two searched once.
 - **The frameworks' retrieval defaults are not the baseline's, and nothing warns you.** I found three by reading the integration source, then measured them:
   - `langchain-qdrant` creates the BM25 sparse vector **without Qdrant's IDF modifier**, which the `Qdrant/bm25` model relies on. Answer-chunk MRR drops from 0.72 to 0.68 (hard set: 0.56 → 0.52). One `sparse_vector_params` argument fixes it.
   - It also prefetches only `k` candidates per retriever before fusion. With IDF on, this made no difference on this corpus (0.72 either way).
   - LlamaIndex fuses dense and sparse results client-side with **relative score fusion**, not RRF. It also encodes BM25 queries with the document-side encoder. And it **silently drops IDF** when you pass your own sparse functions instead of a fastembed model name. Its relative score fusion over 20 candidates was the best variant measured (answer-chunk Hit@5 91%, MRR 0.74).
-- **Step budgets behave differently.** At the step limit, the baseline and LlamaIndex (`early_stopping_method="generate"`) ask the model for a final answer. The prebuilt LangGraph agent raises `GraphRecursionError` instead. That mattered on q30, an unanswerable question where the model kept searching. After four searches, the baseline and LlamaIndex answered that the documents don't say, which is the right answer. LangGraph ran a fifth search and returned nothing. Getting the graceful behaviour in LangGraph means a custom graph or middleware, which gives back part of its line-count advantage.
-- **Framework overhead is small next to LLM time.** The median time not spent waiting on the LLM (retrieval, query embedding on CPU, framework code) was 138 ms for the baseline, 139 ms for LangGraph and 192 ms for LlamaIndex. End-to-end medians were 1.2–1.6 s.
+- **Step budgets behave differently.** At the step limit, the baseline and LlamaIndex (`early_stopping_method="generate"`) ask the model for a final answer. The prebuilt LangGraph agent raises `GraphRecursionError` instead. That mattered on q30, an unanswerable question where the model kept searching. After four searches, the baseline and LlamaIndex answered that the documents don't say, which is the right answer. LangGraph ran a fifth search and returned nothing. On q31, another unanswerable question, LangGraph's fifth request grew to 8,057 tokens, over the free tier's 8,000-token limit for a single request, and failed with HTTP 413. Getting the graceful behaviour in LangGraph means a custom graph or middleware, which gives back part of its line-count advantage.
+- **Framework overhead is small next to LLM time.** The median time not spent waiting on the LLM (retrieval, query embedding on CPU, framework code) was 95 ms for the baseline, 130 ms for LangGraph and 192 ms for LlamaIndex. End-to-end medians were 1.2–1.6 s.
 - **Code size.** LangGraph needs the least code: 107 lines, against 140 each for the baseline and LlamaIndex. LlamaIndex's 140 include 19 lines of RRF fusion, written only to match the baseline's retrieval.
 
 ## Results
@@ -44,18 +45,19 @@ From [`results/retrieval.json`](results/retrieval.json) (`uv run afbench retriev
 
 *Answer chunk*: a top-5 chunk from the right document contains the evidence text recorded in the golden set. The baseline reproduces the reference repo's published figures (89%, 0.72). Both matched framework variants return exactly the baseline's metrics, so the end-to-end agents below retrieve the same way.
 
-### End to end (10 questions, answer model `openai/gpt-oss-120b`)
+### End to end (14 questions, answer model `openai/gpt-oss-120b`, judge `qwen/qwen3.8-27b`)
 
-From [`results/summary.md`](results/summary.md), built from the raw rows in [`results/e2e/main.jsonl`](results/e2e/main.jsonl). Latency, calls, tokens and cost cover the 9 questions that all three answered without an error. Rate-limit waiting is recorded separately and excluded from latency.
+From [`results/summary.md`](results/summary.md), built from the raw rows in [`results/e2e/main.jsonl`](results/e2e/main.jsonl). Correctness, faithfulness, citations and tool selection cover all 14 questions; an agent error counts as incorrect. Latency, calls, tokens and cost cover the 12 questions that all three answered without an error. Rate-limit waiting is recorded separately and excluded from latency.
 
-| Framework | Correct / faithful | Citation precision | Tool selection | p50 / p95 latency | p50 non-LLM time | LLM calls | Tokens in / out | Cost / question | Errors |
-|---|---|---|---|---|---|---|---|---|---|
-| baseline | pending (judge) | 92% | 90% | 1,215 / 3,094 ms | 138 ms | 2.3 | 2,506 / 280 | $0.00054 | 0 |
-| LangGraph | pending (judge) | 92% | 90% | 1,533 / 2,816 ms | 139 ms | 2.2 | 2,101 / 236 | $0.00046 | 1 |
-| LlamaIndex | pending (judge) | 92% | 90% | 1,613 / 3,454 ms | 192 ms | 2.3 | 2,276 / 255 | $0.00049 | 0 |
+| Framework | Correct | Faithful | Citation precision | Tool selection | p50 / p95 latency | p50 non-LLM time | LLM calls | Tokens in / out | Cost / question | Errors |
+|---|---|---|---|---|---|---|---|---|---|---|
+| baseline | 93% (13/14) | 100% | 94% | 93% | 1,180 / 3,067 ms | 95 ms | 2.2 | 2,379 / 257 | $0.00051 | 0 |
+| LangGraph | 79% (11/14) | 100% | 94% | 93% | 1,533 / 1,818 ms | 130 ms | 2.2 | 2,079 / 244 | $0.00046 | 2 |
+| LlamaIndex | 100% (14/14) | 100% | 94% | 93% | 1,613 / 2,682 ms | 192 ms | 2.3 | 2,330 / 253 | $0.00050 | 0 |
 
-- **Tool selection** means the run called the tool the question needs: SQL or the calculator where the golden set names one, document search otherwise. All three miss the same question. On q27 each implementation stated the 79 − 72 difference without calling the calculator, as the reference agent also did.
-- **Errors**: LangGraph's one error is q30 hitting the step budget, described above. LangGraph also failed q31: after four searches, its fifth request was 8,057 tokens, over Groq's 8,000 tokens-per-minute limit for a single request. That question isn't in the table yet, because the baseline's q31 run is still pending.
+- **Correct and faithful** are graded by `qwen/qwen3.8-27b`, a different model family from the answer model, against the golden reference answer and the context the agent actually retrieved (prompt in [`src/afbench/evals.py`](src/afbench/evals.py); each verdict's one-line reason is in the raw rows). Faithful covers answered rows only. Judging the 40 answers took 58,088 input and 2,547 output tokens.
+- **Tool selection** means the run called the tool the question needs: SQL or the calculator where the golden set names one, document search otherwise. All three miss the same question: none called the calculator on q27. Only LlamaIndex's answer still stated the difference.
+- **Errors**: both are LangGraph's, on the two unanswerable questions: q30 hit the step budget, and q31's fifth request exceeded the per-request token limit (HTTP 413). Both are described above.
 - **Cost** uses Groq's list price for `openai/gpt-oss-120b`: $0.15 input / $0.60 output per million tokens ([console.groq.com/docs/models](https://console.groq.com/docs/models), read 2026-10-28). It excludes judge calls.
 - **The question set** is a fixed, rule-based subset of the 65 golden questions (`evals.select_subset`): the first 3 core and first 3 hard lookups, then the first 2 questions of every other category, in file order. The shared free-tier quota set its size; no questions were hand-picked.
 
@@ -66,7 +68,7 @@ From [`results/summary.md`](results/summary.md), built from the raw rows in [`re
 | Logical lines of code ([`results/loc.json`](results/loc.json); no blanks, comments or docstrings) | 140 | 107 | 140 |
 | Cold import time, 5 runs, min–max ([`results/import-times.txt`](results/import-times.txt)) | 5.5–6.4 s | 6.6–7.7 s | 5.3–7.9 s |
 
-Shared code (corpus loading and chunking, tool implementations, embeddings) is 531 lines, the same for all three. Each framework's count includes its index build, retriever wrapper, tool wrappers and agent. LangGraph's and LlamaIndex's also include the small adapters that put the shared embedder behind their embedding interfaces. Import times were measured on a busy machine: read them as "all similar", not as a ranking.
+Shared code (corpus loading and chunking, tool implementations, embeddings) is 536 lines, the same for all three. Each framework's count includes its index build, retriever wrapper, tool wrappers and agent. LangGraph's and LlamaIndex's also include the small adapters that put the shared embedder behind their embedding interfaces. Import times were measured on a busy machine: read them as "all similar", not as a ranking.
 
 ### Indexing ([`results/index.json`](results/index.json))
 
@@ -133,7 +135,7 @@ uv run afbench report             # results/summary.{md,json}
 uv run afbench ask langgraph "Which PEP introduced the walrus operator?"
 ```
 
-`e2e` and `judge` probe their model first and don't start while its daily window is spent; `--wait-for-quota HOURS` waits for it instead. Every successful completion is cached under `data/cache/llm/`, keyed by the exact request, so a run interrupted mid-question replays the calls it already paid for. A replayed call counts at its original HTTP time, and the row records how many calls were replayed (`replayed_calls`).
+`e2e` and `judge` probe their model first and don't start while its daily window is spent, and stop cleanly when a mid-run wait for it would exceed 30 minutes; `--wait-for-quota HOURS` waits up to that long instead. Every successful completion is cached under `data/cache/llm/`, keyed by the exact request, so a run interrupted mid-question replays the calls it already paid for. A replayed call counts at its original HTTP time, and the row records how many calls were replayed (`replayed_calls`).
 
 `make bench` runs the whole chain. The Dockerfile builds the indexes at image build time. I haven't built the image: there is no Docker on the machine this was made on.
 
@@ -153,7 +155,7 @@ The tests run offline:
 
 ## Limitations
 
-- End-to-end quality (correctness, faithfulness) is pending, as described at the top.
+- One run per framework, one judge model, 14 questions: enough to see what goes wrong and why, not to rank close results. The judge was not calibrated against human labels; its reasons are in the raw rows for spot checks.
 - 10 to 14 questions is a small sample. It shows the three implementations behave alike on this workload, but it cannot rank small quality differences. The retrieval eval over 48 questions is the more reliable comparison.
 - I wrote the golden set by hand after reading the documents. Each PEP covers one topic, which makes document-level retrieval easy, so the answer-chunk metric is the more informative one.
 - Each question ran once, so nondeterminism in the model's tool choices (see q21) shows up but is not averaged out.

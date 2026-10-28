@@ -2,25 +2,25 @@
 
 Answer model `openai/gpt-oss-120b`, judge `qwen/qwen3.8-27b`.
 
-## End to end (10 questions, each answered by all three)
+## End to end (14 questions, each answered by all three)
 
-Latency, LLM calls, tokens, prompt size and cost cover the 9 questions that all three answered without an error.
+Latency, LLM calls, tokens, prompt size and cost cover the 12 questions that all three answered without an error.
 
 | Framework | Correct | Faithful | Citation precision | Tool selection | p50 / p95 latency | p50 non-LLM time | LLM calls | Tokens in / out | Prompt chars sent | Cost / question | Errors | 429s |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| baseline | pending (0/10 judged) | pending (0/10 judged) | 92% | 90% | 1,215 / 3,094 ms | 138 ms | 2.3 | 2,506 / 280 | 12,063 | $0.00054 | 0 | 3 |
-| langgraph | pending (0/9 judged) | pending (0/9 judged) | 92% | 90% | 1,533 / 2,816 ms | 139 ms | 2.2 | 2,101 / 236 | 10,050 | $0.00046 | 1 | 3 |
-| llamaindex | pending (0/10 judged) | pending (0/10 judged) | 92% | 90% | 1,613 / 3,454 ms | 192 ms | 2.3 | 2,276 / 255 | 11,169 | $0.00049 | 0 | 2 |
+| baseline | 93% | 100% | 94% | 93% | 1,180 / 3,067 ms | 95 ms | 2.2 | 2,379 / 257 | 11,484 | $0.00051 | 0 | 3 |
+| langgraph | 79% | 100% | 94% | 93% | 1,533 / 1,818 ms | 130 ms | 2.2 | 2,079 / 244 | 9,959 | $0.00046 | 2 | 3 |
+| llamaindex | 100% | 100% | 94% | 93% | 1,613 / 2,682 ms | 192 ms | 2.3 | 2,330 / 253 | 11,394 | $0.00050 | 0 | 2 |
 
 ### By category
 
 | Category | baseline | langgraph | llamaindex |
 |---|---|---|---|
-| calculation (2) | 50% tool, 0 errors | 50% tool, 0 errors | 50% tool, 0 errors |
-| lookup (3) | 100% tool, 0 errors | 100% tool, 0 errors | 100% tool, 0 errors |
-| metadata_sql (2) | 100% tool, 0 errors | 100% tool, 0 errors | 100% tool, 0 errors |
-| multi_doc (2) | 100% tool, 0 errors | 100% tool, 0 errors | 100% tool, 0 errors |
-| unanswerable (1) | 100% tool, 0 errors | 0% correct, 100% tool, 1 errors | 100% tool, 0 errors |
+| calculation (2) | 50% correct, 50% tool, 0 errors | 50% correct, 50% tool, 0 errors | 100% correct, 50% tool, 0 errors |
+| lookup (6) | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors |
+| metadata_sql (2) | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors |
+| multi_doc (2) | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors | 100% correct, 100% tool, 0 errors |
+| unanswerable (2) | 100% correct, 100% tool, 0 errors | 0% correct, 100% tool, 2 errors | 100% correct, 100% tool, 0 errors |
 
 ## Retrieval (all golden questions, no LLM)
 
@@ -42,7 +42,7 @@ Latency, LLM calls, tokens, prompt size and cost cover the 9 questions that all 
 | baseline | 140 |
 | langgraph | 107 |
 | llamaindex | 140 |
-| shared | 531 |
+| shared | 536 |
 
 ## Indexing (25 documents, 1251 chunks incl. metadata cards)
 

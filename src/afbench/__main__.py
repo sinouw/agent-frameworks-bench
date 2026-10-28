@@ -44,9 +44,13 @@ def _subset(settings: Settings, args: argparse.Namespace) -> list[evals.GoldenIt
     return items if getattr(args, "all", False) else evals.select_subset(items)
 
 
+def _daily_wait(args: argparse.Namespace) -> float:
+    return args.wait_for_quota * 3600 if args.wait_for_quota else DAILY_WAIT_S
+
+
 def _quota_ok(settings: Settings, model: str, args: argparse.Namespace) -> bool:
     """Probe the model before a pass; wait for its daily window if asked to, else stop."""
-    max_wait = args.wait_for_quota * 3600 if args.wait_for_quota else DAILY_WAIT_S
+    max_wait = _daily_wait(args)
     result = asyncio.run(quota.wait_for_quota(settings.llm_base_url, settings.api_key(), model, max_wait))
     if result.status != 200:
         print(f"not starting: {quota.describe(result)}. Rerun later, or pass --wait-for-quota HOURS.")
@@ -114,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if not _quota_ok(settings, settings.answer_model, args):
             return 3
-        bench = build_bench(settings, open_searchers(settings), frameworks)
+        bench = build_bench(settings, open_searchers(settings), frameworks, daily_wait_s=_daily_wait(args))
         print(f"{len(items)} questions x {len(bench.agents)} frameworks, answer model {settings.answer_model}")
         completed = asyncio.run(evals.answer_all(bench.agents, bench.meter, items, settings.answer_model, out))
         return 0 if completed else 3
@@ -122,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
         items = evals.load_golden(settings.golden_path)
         if not _quota_ok(settings, settings.judge_model, args):
             return 3
-        bench = build_bench(settings, {}, ())
+        bench = build_bench(settings, {}, (), daily_wait_s=_daily_wait(args))
         completed = asyncio.run(evals.judge_all(bench.judge, bench.meter, items, settings.judge_model, out))
         return 0 if completed else 3
     elif args.command == "report":

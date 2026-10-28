@@ -155,8 +155,10 @@ def build_bench(
     searchers: dict[str, Searcher],
     frameworks: tuple[str, ...] = FRAMEWORKS,
     inner: httpx.AsyncBaseTransport | None = None,
+    daily_wait_s: float = DAILY_WAIT_S,
 ) -> Bench:
-    """`inner` replaces the real HTTP transport (tests use a scripted backend)."""
+    """`inner` replaces the real HTTP transport (tests use a scripted backend). Daily-quota
+    waits up to `daily_wait_s` are waited out; longer ones stop the pass."""
     from langchain_openai import ChatOpenAI
     from llama_index.llms.openai_like import OpenAILike
 
@@ -164,7 +166,7 @@ def build_bench(
     cache = ResponseCache(settings.index_dir.parent / "cache" / "llm") if inner is None else None
 
     def http() -> httpx.AsyncClient:
-        return metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S, cache=cache)
+        return metered_client(meter, inner, daily_wait_s=daily_wait_s, cache=cache)
 
     key, url, model = settings.api_key(), settings.llm_base_url, settings.answer_model
     sql = SqlTool(settings.sqlite_path)
