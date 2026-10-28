@@ -3,50 +3,24 @@
 from typing import Any
 
 import pytest
-from langchain_core.embeddings import Embeddings
-from langchain_qdrant import SparseEmbeddings, SparseVector
-from llama_index.core.base.embeddings.base import BaseEmbedding
+from llama_index.core import VectorStoreIndex
 from qdrant_client import QdrantClient
 
 from afbench.corpus import build_chunks, load_corpus
-from afbench.embeddings import HashEmbedder, HashSparseEmbedder
+from afbench.embeddings import (
+    CachedEmbeddings,
+    CachedSparse,
+    HashEmbedder,
+    HashSparseEmbedder,
+    LangChainDense,
+    LangChainSparse,
+    LlamaIndexDense,
+    llamaindex_sparse_fns,
+)
 from afbench.frameworks import baseline, langgraph_impl, llamaindex_impl
 from tests.conftest import CORPUS_DIR
 
 DENSE, SPARSE = HashEmbedder(), HashSparseEmbedder()
-
-
-class LCDense(Embeddings):
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        return DENSE.embed_documents(texts)
-
-    def embed_query(self, text: str) -> list[float]:
-        return DENSE.embed_query(text)
-
-
-class LCSparse(SparseEmbeddings):
-    def embed_documents(self, texts: list[str]) -> list[SparseVector]:
-        return [SparseVector(indices=i, values=v) for i, v in SPARSE.embed_documents(texts)]
-
-    def embed_query(self, text: str) -> SparseVector:
-        i, v = SPARSE.embed_query(text)
-        return SparseVector(indices=i, values=v)
-
-
-class LIDense(BaseEmbedding):
-    def _get_text_embedding(self, text: str) -> list[float]:
-        return DENSE.embed_query(text)
-
-    def _get_query_embedding(self, query: str) -> list[float]:
-        return DENSE.embed_query(query)
-
-    async def _aget_query_embedding(self, query: str) -> list[float]:
-        return DENSE.embed_query(query)
-
-
-def li_sparse(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
-    vectors = SPARSE.embed_documents(texts)
-    return [v[0] for v in vectors], [v[1] for v in vectors]
 
 
 @pytest.fixture(scope="module")
@@ -57,21 +31,21 @@ def chunks():
 def _searchers(chunks) -> dict[str, Any]:
     client = QdrantClient(":memory:")
     baseline.build_index(client, "docs", chunks, DENSE, SPARSE)
-    lc_store = langgraph_impl.build_index(chunks, LCDense(), LCSparse(), "docs", idf=True, location=":memory:")
-    li_client = QdrantClient(":memory:")
-    store = llamaindex_impl.vector_store(li_client, "docs", sparse_doc_fn=li_sparse, sparse_query_fn=li_sparse)
-    li_index = llamaindex_impl.build_index(chunks, store, LIDense(embed_batch_size=256))
-    rrf_store = llamaindex_impl.vector_store(
-        li_client, "docs", sparse_doc_fn=li_sparse, sparse_query_fn=li_sparse, fusion=llamaindex_impl.rrf_fusion
+    lc_store = langgraph_impl.build_index(
+        chunks, LangChainDense(DENSE), LangChainSparse(SPARSE), "docs", idf=True, location=":memory:"
     )
-    from llama_index.core import VectorStoreIndex
-
+    li_client = QdrantClient(":memory:")
+    doc_fn, query_fn = llamaindex_sparse_fns(SPARSE, query_side=True)
+    li_index = llamaindex_impl.build_index(
+        chunks, llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn), LlamaIndexDense(DENSE)
+    )
+    rrf_store = llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn, fusion=llamaindex_impl.rrf_fusion)
     return {
         "baseline": baseline.BaselineSearcher(client, "docs", DENSE, SPARSE),
         "langchain": langgraph_impl.LangChainSearcher(lc_store, candidates=20),
         "llamaindex": llamaindex_impl.LlamaIndexSearcher(li_index),
         "llamaindex-rrf": llamaindex_impl.LlamaIndexSearcher(
-            VectorStoreIndex.from_vector_store(rrf_store, embed_model=LIDense()), candidates=20
+            VectorStoreIndex.from_vector_store(rrf_store, embed_model=LlamaIndexDense(DENSE)), candidates=20
         ),
     }
 
@@ -95,3 +69,31 @@ def test_rrf_fusion_ranks_by_reciprocal_rank():
     sparse = VectorStoreQueryResult(nodes=[b, c], similarities=[12.0, 3.0], ids=["b", "c"])
     fused = llamaindex_impl.rrf_fusion(dense, sparse, top_k=2)
     assert fused.ids == ["b", "a"]  # b appears in both lists
+
+
+def test_embedding_cache_round_trips_and_is_used(tmp_path):
+    class Counting(HashEmbedder):
+        calls = 0
+
+        def embed_documents(self, texts):
+            Counting.calls += len(texts)
+            return super().embed_documents(texts)
+
+    cache = CachedEmbeddings(Counting(), SPARSE)
+    vectors = cache.embed_documents(["alpha beta", "gamma"])
+    cache.embed_documents(["gamma", "alpha beta"])
+    assert Counting.calls == 2  # the second call is served from the cache
+    cache.save(tmp_path)
+
+    reloaded = CachedEmbeddings(Counting(), SPARSE)
+    assert reloaded.load(tmp_path)
+    assert reloaded.embed_documents(["alpha beta"])[0] == pytest.approx(vectors[0])
+    assert CachedSparse(reloaded).embed_documents(["gamma"]) == SPARSE.embed_documents(["gamma"])
+    assert Counting.calls == 2
+
+
+def test_llamaindex_default_encodes_queries_document_side():
+    _, default_query = llamaindex_sparse_fns(SPARSE, query_side=False)
+    _, query_side = llamaindex_sparse_fns(SPARSE, query_side=True)
+    assert default_query(["pip pip"])[1] == [[2.0]]
+    assert query_side(["pip pip"])[1] == [[1.0]]

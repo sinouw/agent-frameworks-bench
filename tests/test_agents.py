@@ -2,41 +2,23 @@
 the metered transport. No network, no API key."""
 
 import pytest
-from langchain_openai import ChatOpenAI
-from llama_index.llms.openai_like import OpenAILike
-from openai import AsyncOpenAI
 
-from afbench.common import QAAgent, SqlTool
-from afbench.frameworks.baseline import BaselineAgent
-from afbench.frameworks.langgraph_impl import LangGraphAgent
-from afbench.frameworks.llamaindex_impl import LlamaIndexAgent
-from afbench.transport import Meter, metered_client
+from afbench.config import Settings
+from afbench.stack import MATCHED, build_bench
+from afbench.transport import Meter
 from tests.conftest import ScriptedBackend, StubSearcher, completion
 
 URL = "https://llm.test/v1"
 
 
-def make_agent(
-    framework: str, backend: ScriptedBackend, meter: Meter, searcher: StubSearcher, db, max_steps: int = 5
-) -> QAAgent:
-    http = metered_client(meter, backend.transport())
-    sql = SqlTool(db)
-    if framework == "baseline":
-        client = AsyncOpenAI(api_key="test", base_url=URL, max_retries=0, http_client=http)
-        return BaselineAgent(client, "test-model", searcher, sql, max_steps=max_steps)
-    if framework == "langgraph":
-        chat = ChatOpenAI(model="test-model", api_key="test", base_url=URL, max_retries=0, http_async_client=http)  # type: ignore[arg-type]
-        return LangGraphAgent(chat, searcher, sql, max_steps=max_steps)
-    llm = OpenAILike(
-        model="test-model",
-        api_key="test",
-        api_base=URL,
-        max_retries=0,
-        is_chat_model=True,
-        is_function_calling_model=True,
-        async_http_client=http,  # type: ignore[call-arg]
+def make_agent(framework, backend: ScriptedBackend, meter: Meter, searcher: StubSearcher, db, max_steps: int = 5):
+    """Agents built by the production wiring, talking to the scripted backend."""
+    settings = Settings(
+        groq_api_key="test", llm_base_url=URL, answer_model="test-model", sqlite_path=db, max_steps=max_steps
     )
-    return LlamaIndexAgent(llm, searcher, sql, max_steps=max_steps)
+    bench = build_bench(settings, dict.fromkeys(MATCHED.values(), searcher), (framework,), backend.transport())
+    bench.meter.calls = meter.calls  # share the call log with the caller
+    return bench.agents[framework]
 
 
 FRAMEWORKS = ["baseline", "langgraph", "llamaindex"]
@@ -103,3 +85,12 @@ async def test_step_budget_differs_by_design(metadata_db, stub_searcher):
     assert outcomes["baseline"] == ("Final answer.", None)
     assert outcomes["llamaindex"][1] is None
     assert outcomes["langgraph"] == ("", "no answer within the step budget")
+
+
+@pytest.mark.parametrize("framework", FRAMEWORKS)
+async def test_same_model_and_temperature_on_the_wire(framework, metadata_db, stub_searcher):
+    backend = ScriptedBackend([completion("ok")])
+    await make_agent(framework, backend, Meter(), stub_searcher, metadata_db).answer("q")
+    request = backend.requests[0]
+    assert (request["model"], request.get("temperature")) == ("test-model", 0.0)
+    assert request["messages"][0]["role"] == "system"

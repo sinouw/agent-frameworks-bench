@@ -15,7 +15,7 @@ from llama_index.core.schema import TextNode
 from llama_index.core.tools import BaseTool, FunctionTool
 from llama_index.core.vector_stores.types import VectorStoreQueryResult
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from qdrant_client.hybrid.fusion import DEFAULT_RANKING_CONSTANT_K
 
 from afbench.common import (
@@ -33,23 +33,24 @@ from afbench.common import (
     sql_description,
 )
 from afbench.corpus import Chunk
-
-SparseFn = Callable[[list[str]], tuple[list[list[int]], list[list[float]]]]
+from afbench.embeddings import SparseFn
 
 
 def vector_store(
     client: QdrantClient,
     collection: str,
-    sparse_model: str | None = None,
-    sparse_doc_fn: SparseFn | None = None,
-    sparse_query_fn: SparseFn | None = None,
+    sparse_doc_fn: SparseFn,
+    sparse_query_fn: SparseFn,
     fusion: Callable[..., VectorStoreQueryResult] | None = None,
 ) -> QdrantVectorStore:
+    """`fusion=None` is the library default: relative score fusion. The IDF modifier is what
+    the store sets on its own for `fastembed_sparse_model="Qdrant/bm25"`; with custom sparse
+    functions it would silently drop it, so it is set explicitly."""
     return QdrantVectorStore(
         collection,
         client=client,
         enable_hybrid=True,
-        fastembed_sparse_model=sparse_model,
+        sparse_config=models.SparseVectorParams(index=models.SparseIndexParams(), modifier=models.Modifier.IDF),
         sparse_doc_fn=sparse_doc_fn,
         sparse_query_fn=sparse_query_fn,
         hybrid_fusion_fn=fusion,

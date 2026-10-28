@@ -1,9 +1,9 @@
-"""Wiring for real runs: builds each framework's index with its own Qdrant + fastembed
-integration, opens the retrieval variants compared in the retrieval eval, and creates
-the three agents on one metered HTTP transport.
+"""Wiring for real runs: builds each framework's index through its own Qdrant integration,
+opens the retrieval variants compared in the retrieval eval, and creates the three agents
+on one metered HTTP transport.
 
-Each framework gets its own embedded Qdrant directory under `data/index/`, because an
-embedded Qdrant directory can only be opened by one client at a time.
+The corpus is embedded once; each framework gets its own embedded Qdrant directory under
+`data/index/` (an embedded Qdrant directory can only be opened by one client at a time).
 """
 
 from __future__ import annotations
@@ -13,13 +13,23 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
+import httpx
 from openai import AsyncOpenAI
 from qdrant_client import QdrantClient
 
 from afbench.common import QAAgent, Searcher, SqlTool
 from afbench.config import Settings
 from afbench.corpus import build_chunks, load_corpus, write_metadata_db
-from afbench.embeddings import FastEmbedDense, FastEmbedSparse
+from afbench.embeddings import (
+    CachedEmbeddings,
+    CachedSparse,
+    FastEmbedDense,
+    FastEmbedSparse,
+    LangChainDense,
+    LangChainSparse,
+    LlamaIndexDense,
+    llamaindex_sparse_fns,
+)
 from afbench.frameworks import baseline, langgraph_impl, llamaindex_impl
 from afbench.transport import Meter, metered_client
 
@@ -34,11 +44,16 @@ MATCHED = {
 }
 
 
-def build_indexes(settings: Settings) -> dict[str, Any]:
-    from langchain_community.embeddings import FastEmbedEmbeddings
-    from langchain_qdrant import FastEmbedSparse as LCFastEmbedSparse
-    from llama_index.embeddings.fastembed import FastEmbedEmbedding
+def shared_embeddings(settings: Settings) -> tuple[CachedEmbeddings, CachedSparse]:
+    """One dense and one sparse model for the whole process, with the document-vector cache."""
+    cache = CachedEmbeddings(FastEmbedDense(settings.embedding_model), FastEmbedSparse(settings.sparse_model))
+    cache.load(settings.index_dir / "embeddings")
+    return cache, CachedSparse(cache)
 
+
+def build_indexes(settings: Settings) -> dict[str, Any]:
+    """Embed the corpus once, then let each framework write its own index from the cache.
+    The per-framework seconds are therefore indexing overhead, not embedding time."""
     docs = load_corpus(settings.corpus_dir)
     chunks = build_chunks(docs)
     write_metadata_db(docs, settings.sqlite_path)
@@ -47,94 +62,82 @@ def build_indexes(settings: Settings) -> dict[str, Any]:
     def timed(name: str, fn: Any) -> None:
         started = time.perf_counter()
         fn()
-        stats["seconds"][name] = round(time.perf_counter() - started, 1)
-        print(f"indexed {name} in {stats['seconds'][name]}s")
+        stats["seconds"][name] = round(time.perf_counter() - started, 2)
+        print(f"{name}: {stats['seconds'][name]}s", flush=True)
+
+    settings.index_dir.mkdir(parents=True, exist_ok=True)
+    cache, sparse = shared_embeddings(settings)
+    cached = (settings.index_dir / "embeddings" / "index.json").exists()
+    label = "embed corpus (loaded from cache)" if cached else "embed corpus once (dense + BM25, shared)"
+    timed(label, lambda: cache.warm([c.embedding_text() for c in chunks]))
+    cache.save(settings.index_dir / "embeddings")
 
     def run_baseline() -> None:
         client = QdrantClient(path=str(settings.index_dir / "baseline"))
-        dense, sparse = FastEmbedDense(settings.embedding_model), FastEmbedSparse(settings.sparse_model)
-        baseline.build_index(client, "docs", chunks, dense, sparse)
+        baseline.build_index(client, "docs", chunks, cache, sparse)
         client.close()
 
-    def run_langchain(collection: str, idf: bool) -> None:
-        store = langgraph_impl.build_index(
-            chunks,
-            FastEmbedEmbeddings(model_name=settings.embedding_model),
-            LCFastEmbedSparse(model_name=settings.sparse_model),
-            collection,
-            idf=idf,
-            path=str(settings.index_dir / "langchain"),
-        )
-        store.client.close()
+    def run_langchain() -> None:
+        for collection, idf in (("docs", False), ("docs_idf", True)):
+            store = langgraph_impl.build_index(
+                chunks,
+                LangChainDense(cache),
+                LangChainSparse(sparse),
+                collection,
+                idf=idf,
+                path=str(settings.index_dir / "langchain"),
+            )
+            store.client.close()
 
     def run_llamaindex() -> None:
         client = QdrantClient(path=str(settings.index_dir / "llamaindex"))
-        store = llamaindex_impl.vector_store(client, "docs", sparse_model=settings.sparse_model)
-        llamaindex_impl.build_index(chunks, store, FastEmbedEmbedding(model_name=settings.embedding_model))
+        doc_fn, query_fn = llamaindex_sparse_fns(sparse, query_side=True)
+        store = llamaindex_impl.vector_store(client, "docs", doc_fn, query_fn)
+        llamaindex_impl.build_index(chunks, store, LlamaIndexDense(cache))
         client.close()
 
-    settings.index_dir.mkdir(parents=True, exist_ok=True)
-    timed("baseline", run_baseline)
-    timed("langchain", lambda: run_langchain("docs", idf=False))
-    timed("langchain (IDF collection)", lambda: run_langchain("docs_idf", idf=True))
-    timed("llamaindex", run_llamaindex)
+    timed("baseline: write index", run_baseline)
+    timed("langchain: write index (x2: default and IDF collections)", run_langchain)
+    timed("llamaindex: write index", run_llamaindex)
     return stats
 
 
 def open_searchers(settings: Settings) -> dict[str, Searcher]:
-    """Every retrieval variant, keyed by a readable name."""
-    from langchain_community.embeddings import FastEmbedEmbeddings
-    from langchain_qdrant import FastEmbedSparse as LCFastEmbedSparse
+    """Every retrieval variant, keyed by a readable name. All share one embedding model."""
     from llama_index.core import VectorStoreIndex
-    from llama_index.embeddings.fastembed import FastEmbedEmbedding
 
     index_dir = settings.index_dir
     if not (index_dir / "llamaindex").exists():
         raise RuntimeError("No index yet: run `uv run afbench index` first.")
+    cache, sparse = shared_embeddings(settings)
 
     bl_client = QdrantClient(path=str(index_dir / "baseline"))
-    dense, sparse = FastEmbedDense(settings.embedding_model), FastEmbedSparse(settings.sparse_model)
-
     lc_client = QdrantClient(path=str(index_dir / "langchain"))
-    lc_dense = FastEmbedEmbeddings(model_name=settings.embedding_model)
-    lc_sparse = LCFastEmbedSparse(model_name=settings.sparse_model)
+    lc_dense, lc_sparse = LangChainDense(cache), LangChainSparse(sparse)
     lc_default = langgraph_impl.open_store(lc_client, "docs", lc_dense, lc_sparse)
     lc_idf = langgraph_impl.open_store(lc_client, "docs_idf", lc_dense, lc_sparse)
 
     li_client = QdrantClient(path=str(index_dir / "llamaindex"))
-    li_embed = FastEmbedEmbedding(model_name=settings.embedding_model)
+    li_embed = LlamaIndexDense(cache)
 
-    def query_fn(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
-        vectors = [sparse.embed_query(t) for t in texts]
-        return [v[0] for v in vectors], [v[1] for v in vectors]
+    def li_index(query_side: bool, rrf: bool) -> VectorStoreIndex:
+        doc_fn, query_fn = llamaindex_sparse_fns(sparse, query_side)
+        fusion = llamaindex_impl.rrf_fusion if rrf else None
+        store = llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn, fusion)
+        return VectorStoreIndex.from_vector_store(store, embed_model=li_embed)
 
-    li_default = VectorStoreIndex.from_vector_store(
-        llamaindex_impl.vector_store(li_client, "docs", sparse_model=settings.sparse_model), embed_model=li_embed
-    )
-    li_matched = VectorStoreIndex.from_vector_store(
-        llamaindex_impl.vector_store(
-            li_client,
-            "docs",
-            sparse_model=settings.sparse_model,
-            sparse_query_fn=query_fn,
-            fusion=llamaindex_impl.rrf_fusion,
-        ),
-        embed_model=li_embed,
-    )
-    li_query_only = VectorStoreIndex.from_vector_store(
-        llamaindex_impl.vector_store(li_client, "docs", sparse_model=settings.sparse_model, sparse_query_fn=query_fn),
-        embed_model=li_embed,
-    )
     n = settings.candidates
     variants: list[Searcher] = [
-        baseline.BaselineSearcher(bl_client, "docs", dense, sparse, candidates=n, name="baseline"),
+        baseline.BaselineSearcher(bl_client, "docs", cache, sparse, candidates=n, name="baseline"),
         langgraph_impl.LangChainSearcher(lc_default, None, name="langchain: defaults"),
         langgraph_impl.LangChainSearcher(lc_idf, None, name="langchain: IDF"),
         langgraph_impl.LangChainSearcher(lc_idf, n, name=MATCHED["langgraph"]),
-        llamaindex_impl.LlamaIndexSearcher(li_default, None, name="llamaindex: defaults"),
-        llamaindex_impl.LlamaIndexSearcher(li_default, n, name="llamaindex: 20 candidates"),
-        llamaindex_impl.LlamaIndexSearcher(li_query_only, n, name="llamaindex: 20 candidates + BM25 query encoding"),
-        llamaindex_impl.LlamaIndexSearcher(li_matched, n, name=MATCHED["llamaindex"]),
+        llamaindex_impl.LlamaIndexSearcher(li_index(False, False), None, name="llamaindex: defaults"),
+        llamaindex_impl.LlamaIndexSearcher(li_index(False, False), n, name="llamaindex: 20 candidates"),
+        llamaindex_impl.LlamaIndexSearcher(
+            li_index(True, False), n, name="llamaindex: 20 candidates + BM25 query encoding"
+        ),
+        llamaindex_impl.LlamaIndexSearcher(li_index(True, True), n, name=MATCHED["llamaindex"]),
     ]
     return {s.name: s for s in variants}
 
@@ -146,7 +149,13 @@ class Bench:
     judge: AsyncOpenAI
 
 
-def build_bench(settings: Settings, searchers: dict[str, Searcher], frameworks: tuple[str, ...] = FRAMEWORKS) -> Bench:
+def build_bench(
+    settings: Settings,
+    searchers: dict[str, Searcher],
+    frameworks: tuple[str, ...] = FRAMEWORKS,
+    inner: httpx.AsyncBaseTransport | None = None,
+) -> Bench:
+    """`inner` replaces the real HTTP transport (tests use a scripted backend)."""
     from langchain_openai import ChatOpenAI
     from llama_index.llms.openai_like import OpenAILike
 
@@ -157,7 +166,7 @@ def build_bench(settings: Settings, searchers: dict[str, Searcher], frameworks: 
     agents: dict[str, QAAgent] = {}
     # SDK retries are off everywhere: the metered transport handles 429s identically for all.
     if "baseline" in frameworks:
-        client = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter))
+        client = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner))
         agents["baseline"] = baseline.BaselineAgent(client, model, searchers[MATCHED["baseline"]], sql, **common)
     if "langgraph" in frameworks:
         chat = ChatOpenAI(
@@ -166,7 +175,7 @@ def build_bench(settings: Settings, searchers: dict[str, Searcher], frameworks: 
             base_url=url,
             temperature=0.0,
             max_retries=0,
-            http_async_client=metered_client(meter),
+            http_async_client=metered_client(meter, inner),
         )
         agents["langgraph"] = langgraph_impl.LangGraphAgent(chat, searchers[MATCHED["langgraph"]], sql, **common)
     if "llamaindex" in frameworks:
@@ -180,10 +189,10 @@ def build_bench(settings: Settings, searchers: dict[str, Searcher], frameworks: 
             is_chat_model=True,
             is_function_calling_model=True,
             context_window=131_072,
-            async_http_client=metered_client(meter),  # type: ignore[call-arg]
+            async_http_client=metered_client(meter, inner),  # type: ignore[call-arg]
         )
         agents["llamaindex"] = llamaindex_impl.LlamaIndexAgent(llm, searchers[MATCHED["llamaindex"]], sql, **common)
-    judge = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter))
+    judge = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner))
     return Bench(meter, agents, judge)
 
 

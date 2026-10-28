@@ -1,0 +1,10 @@
+{
+  "documents": 25,
+  "chunks": 1251,
+  "seconds": {
+    "embed corpus once (dense + BM25, shared)": 0.01,
+    "baseline: write index": 1.94,
+    "langchain: write index (x2: default and IDF collections)": 4.47,
+    "llamaindex: write index": 2.55
+  }
+}
