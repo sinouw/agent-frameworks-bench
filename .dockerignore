@@ -1,0 +1,6 @@
+.env
+.venv
+data/index
+data/metadata.db
+.git
+**/__pycache__

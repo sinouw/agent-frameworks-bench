@@ -1,0 +1,79 @@
+[project]
+name = "agent-frameworks-bench"
+version = "0.1.0"
+description = "One document-QA agent built three ways (plain SDK, LangGraph, LlamaIndex) and measured head to head."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastembed>=0.4.2",
+    "httpx>=0.28.1",
+    "onnxruntime>=1.19,<1.20",
+    "openai>=1.60",
+    "pydantic-settings>=2.6",
+    "qdrant-client>=1.12",
+    # LangChain / LangGraph
+    "langchain>=1.0",
+    "langgraph>=1.0",
+    "langchain-openai>=1.0",
+    "langchain-qdrant>=1.0",
+    "langchain-community>=0.4",
+    # LlamaIndex
+    "llama-index-core>=0.14",
+    "llama-index-llms-openai-like>=0.5",
+    "llama-index-embeddings-fastembed>=0.5",
+    "llama-index-vector-stores-qdrant>=0.8",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13",
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/afbench"]
+
+[tool.uv]
+constraint-dependencies = ["cryptography<48"]
+
+[project.scripts]
+afbench = "afbench.__main__:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+    "ignore:Payload indexes have no effect:UserWarning",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM"]
+ignore = ["S101", "S608", "E501"]  # long lines are left to the formatter (markdown table rows)
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
