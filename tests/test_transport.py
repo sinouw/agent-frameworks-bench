@@ -3,7 +3,7 @@ import json
 import httpx
 import pytest
 
-from afbench.transport import Meter, MeteredTransport, parse_duration, retry_after
+from afbench.transport import Meter, MeteredTransport, ResponseCache, parse_duration, retry_after
 from tests.conftest import completion
 
 
@@ -93,3 +93,48 @@ async def test_short_daily_quota_waits_are_waited_out_when_allowed():
     assert response.status_code == 200
     assert meter.quota_exhausted is None
     assert meter.backoff_s == pytest.approx(535.45)
+
+
+async def test_waits_for_the_requests_budget_to_reset():
+    meter, clock = Meter(), FakeClock()
+    headers = {"x-ratelimit-remaining-requests": "0", "x-ratelimit-reset-requests": "1m30s"}
+    async with _client(lambda r: httpx.Response(200, headers=headers, json=completion("ok")), meter, clock) as client:
+        await client.post("/chat/completions", json=BODY)
+        await client.post("/chat/completions", json=BODY)
+    assert meter.throttle_s == pytest.approx(90)
+
+
+async def test_cached_responses_are_replayed_without_a_request(tmp_path):
+    sent: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(request)
+        return httpx.Response(200, json=completion("ok"))
+
+    for _ in range(2):
+        meter, clock = Meter(), FakeClock()
+        transport = MeteredTransport(
+            meter, httpx.MockTransport(handler), sleep=clock.sleep, clock=clock, cache=ResponseCache(tmp_path)
+        )
+        async with httpx.AsyncClient(transport=transport, base_url="https://llm.test") as client:
+            response = await client.post("/chat/completions", json=BODY)
+            other = await client.post("/chat/completions", json={**BODY, "model": "n"})
+        assert response.json()["choices"][0]["message"]["content"] == "ok"
+        assert other.status_code == 200
+    assert len(sent) == 2  # the second pass replayed both
+    assert [c.cached for c in meter.calls] == [True, True]
+    assert meter.calls[0].input_tokens == 100
+
+
+async def test_errors_are_not_cached(tmp_path):
+    meter, clock = Meter(), FakeClock()
+    transport = MeteredTransport(
+        meter,
+        httpx.MockTransport(lambda r: httpx.Response(413, json={"error": {"message": "too large"}})),
+        sleep=clock.sleep,
+        clock=clock,
+        cache=ResponseCache(tmp_path),
+    )
+    async with httpx.AsyncClient(transport=transport, base_url="https://llm.test") as client:
+        await client.post("/chat/completions", json=BODY)
+    assert list(tmp_path.iterdir()) == []

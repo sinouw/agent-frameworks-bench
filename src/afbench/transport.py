@@ -10,7 +10,11 @@ gives framework-independent measurements of what actually went over the wire:
 - rate limiting handled identically for everyone: SDK retries are disabled, and this
   transport waits out HTTP 429s and proactively paces requests against the provider's
   tokens-per-minute budget. That waiting is recorded separately (`throttle_s`,
-  `backoff_s`) so it can be subtracted from latency.
+  `backoff_s`) so it can be subtracted from latency. Both the tokens-per-minute and the
+  requests budgets are read from Groq's `x-ratelimit-*` headers on every response;
+- an optional on-disk response cache: every successful completion is stored, keyed by the
+  exact request body, so an interrupted run replays the calls it already paid for instead
+  of making them again. A replayed call keeps its original HTTP time and is marked `cached`.
 
 The meter is per process and the eval runs questions one at a time, so `Meter.reset()`
 between questions is enough; this is not designed for concurrent questions.
@@ -20,16 +24,18 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import hashlib
 import json
 import re
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import httpx
 
-_DAILY_QUOTA = re.compile(r"per day|\(TPD\)|\(RPD\)", re.IGNORECASE)
+DAILY_QUOTA = re.compile(r"per day|\(TPD\)|\(RPD\)", re.IGNORECASE)
 _TRY_AGAIN = re.compile(r"try again in ([\d.hms]+)", re.IGNORECASE)
 _DURATION_PART = re.compile(r"([\d.]+)(ms|h|m|s)")
 
@@ -52,6 +58,7 @@ class CallRecord:
     request_chars: int
     messages: int
     tools: int
+    cached: bool = False
 
 
 @dataclass
@@ -77,6 +84,30 @@ class _Budget:
     limit: int = 0
     remaining: int = 0
     seen_at: float = 0.0
+    requests_remaining: int | None = None
+    requests_reset_s: float = 0.0
+
+
+class ResponseCache:
+    """Successful completions on disk, one JSON file per request body hash."""
+
+    def __init__(self, directory: Path) -> None:
+        self.directory = directory
+
+    @staticmethod
+    def key(url: str, body: bytes) -> str:
+        return hashlib.sha256(url.encode() + b"\n" + body).hexdigest()
+
+    def get(self, key: str) -> dict[str, Any] | None:
+        path = self.directory / f"{key}.json"
+        return _json(path.read_bytes()) if path.exists() else None
+
+    def put(self, key: str, content: bytes, http_ms: float) -> None:
+        self.directory.mkdir(parents=True, exist_ok=True)
+        entry = {"content": content.decode("utf-8", "replace"), "http_ms": round(http_ms, 1)}
+        tmp = self.directory / f"{key}.tmp"
+        tmp.write_text(json.dumps(entry))
+        tmp.replace(self.directory / f"{key}.json")
 
 
 class MeteredTransport(httpx.AsyncBaseTransport):
@@ -88,6 +119,7 @@ class MeteredTransport(httpx.AsyncBaseTransport):
         daily_wait_s: float = 0.0,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
         clock: Callable[[], float] = time.monotonic,
+        cache: ResponseCache | None = None,
     ) -> None:
         self.meter = meter
         self.inner = inner or httpx.AsyncHTTPTransport()
@@ -97,12 +129,21 @@ class MeteredTransport(httpx.AsyncBaseTransport):
         self.daily_wait_s = daily_wait_s
         self._sleep = sleep
         self._clock = clock
+        self.cache = cache
         self._budgets: dict[str, _Budget] = {}
 
     async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
         body = await request.aread()
         payload = _json(body)
         model = str(payload.get("model", "?"))
+        key = ResponseCache.key(str(request.url), body) if self.cache else ""
+        if self.cache and (hit := self.cache.get(key)):
+            content = str(hit["content"]).encode()
+            response = httpx.Response(
+                200, headers={"content-type": "application/json"}, content=content, request=request
+            )
+            self._record(model, payload, len(body), response, float(hit["http_ms"]), cached=True)
+            return response
         waited = 0.0
         while True:
             pause = self._pacing_delay(model, len(body))
@@ -116,13 +157,15 @@ class MeteredTransport(httpx.AsyncBaseTransport):
             response = _rebuild(raw, content, request)
             self._update_budget(model, response.headers)
             if response.status_code != 429:
+                if self.cache and response.status_code == 200:
+                    self.cache.put(key, content, http_ms)
                 self._record(model, payload, len(body), response, http_ms)
                 return response
 
             self.meter.rate_limited += 1
             text = content.decode("utf-8", "replace")
             wait = retry_after(response.headers, text)
-            daily = bool(_DAILY_QUOTA.search(text))
+            daily = bool(DAILY_QUOTA.search(text))
             if daily and wait > self.daily_wait_s:
                 self.meter.quota_exhausted = text[:300]
                 return response
@@ -133,9 +176,15 @@ class MeteredTransport(httpx.AsyncBaseTransport):
             await self._sleep(wait)
 
     def _pacing_delay(self, model: str, request_bytes: int) -> float:
-        """Wait until the token bucket can plausibly fit this request plus its completion."""
+        """Wait until the request budget has reset (if spent) and the token bucket can
+        plausibly fit this request plus its completion."""
         budget = self._budgets.get(model)
-        if budget is None or budget.limit <= 0:
+        if budget is None:
+            return 0.0
+        if budget.requests_remaining is not None and budget.requests_remaining <= 0:
+            wait = budget.requests_reset_s - (self._clock() - budget.seen_at)
+            return min(max(0.0, wait), max(self.max_wait_s, self.daily_wait_s))
+        if budget.limit <= 0:
             return 0.0
         rate = budget.limit / 60.0  # tokens refilled per second
         available = min(budget.limit, budget.remaining + (self._clock() - budget.seen_at) * rate)
@@ -143,15 +192,24 @@ class MeteredTransport(httpx.AsyncBaseTransport):
         return max(0.0, (needed - available) / rate)
 
     def _update_budget(self, model: str, headers: httpx.Headers) -> None:
-        try:
-            limit = int(headers["x-ratelimit-limit-tokens"])
-            remaining = int(headers["x-ratelimit-remaining-tokens"])
-        except (KeyError, ValueError):
-            return
-        self._budgets[model] = _Budget(limit, remaining, self._clock())
+        budget = _Budget(seen_at=self._clock())
+        with contextlib.suppress(KeyError, ValueError):
+            budget.limit = int(headers["x-ratelimit-limit-tokens"])
+            budget.remaining = int(headers["x-ratelimit-remaining-tokens"])
+        with contextlib.suppress(KeyError, ValueError):
+            budget.requests_remaining = int(headers["x-ratelimit-remaining-requests"])
+            budget.requests_reset_s = parse_duration(headers.get("x-ratelimit-reset-requests", ""))
+        if budget.limit or budget.requests_remaining is not None:
+            self._budgets[model] = budget
 
     def _record(
-        self, model: str, payload: dict[str, Any], request_bytes: int, response: httpx.Response, http_ms: float
+        self,
+        model: str,
+        payload: dict[str, Any],
+        request_bytes: int,
+        response: httpx.Response,
+        http_ms: float,
+        cached: bool = False,
     ) -> None:
         usage = _json(response.content).get("usage") or {}
         self.meter.calls.append(
@@ -164,6 +222,7 @@ class MeteredTransport(httpx.AsyncBaseTransport):
                 request_chars=request_bytes,
                 messages=len(payload.get("messages") or []),
                 tools=len(payload.get("tools") or []),
+                cached=cached,
             )
         )
 
@@ -196,6 +255,10 @@ def _rebuild(raw: httpx.Response, content: bytes, request: httpx.Request) -> htt
 
 
 def metered_client(
-    meter: Meter, inner: httpx.AsyncBaseTransport | None = None, daily_wait_s: float = 0.0
+    meter: Meter,
+    inner: httpx.AsyncBaseTransport | None = None,
+    daily_wait_s: float = 0.0,
+    cache: ResponseCache | None = None,
 ) -> httpx.AsyncClient:
-    return httpx.AsyncClient(transport=MeteredTransport(meter, inner, daily_wait_s=daily_wait_s), timeout=120)
+    transport = MeteredTransport(meter, inner, daily_wait_s=daily_wait_s, cache=cache)
+    return httpx.AsyncClient(transport=transport, timeout=120)

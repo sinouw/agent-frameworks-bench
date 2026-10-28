@@ -177,13 +177,17 @@ def parse_judgement(text: str) -> dict[str, Any]:
     }
 
 
+def judge_prompt(item: GoldenItem, answer: str, tools: list[dict[str, Any]]) -> str:
+    context = "\n\n".join(f"[{t['name']}]\n{t['output']}" for t in tools)[:16_000] or "(no tool calls)"
+    return JUDGE_PROMPT.format(
+        question=item.question, reference=item.reference_answer, answer=answer or "(empty)", context=context
+    )
+
+
 async def judge_answer(
     judge: AsyncOpenAI, model: str, item: GoldenItem, answer: str, tools: list[dict[str, Any]]
 ) -> dict[str, Any]:
-    context = "\n\n".join(f"[{t['name']}]\n{t['output']}" for t in tools)[:16_000] or "(no tool calls)"
-    prompt = JUDGE_PROMPT.format(
-        question=item.question, reference=item.reference_answer, answer=answer or "(empty)", context=context
-    )
+    prompt = judge_prompt(item, answer, tools)
     response = await judge.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
@@ -204,7 +208,9 @@ def agent_row(
     http_ms = sum(c.http_ms for c in calls)
     cited_docs = [h.doc_id for h in result.cited]
     tools_used = [t.name for t in result.tools]
-    latency_ms = wall_ms - wait_ms
+    # A call replayed from the response cache took no time now; count its original HTTP time.
+    replayed = [c for c in calls if c.cached]
+    latency_ms = wall_ms - wait_ms + sum(c.http_ms for c in replayed)
     return {
         "framework": framework,
         "id": item.id,
@@ -232,6 +238,7 @@ def agent_row(
         "llm_http_ms": round(http_ms),
         "overhead_ms": round(latency_ms - http_ms),  # everything that isn't waiting on the LLM
         "rate_limited": meter.rate_limited,
+        "replayed_calls": len(replayed),
     }
 
 
@@ -246,18 +253,18 @@ def load_rows(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
     return rows
 
 
-def _answered(row: dict[str, Any] | None) -> bool:
+def answered(row: dict[str, Any] | None) -> bool:
     return bool(row) and not (row or {}).get("error")
 
 
-def _final(row: dict[str, Any] | None) -> bool:
+def final(row: dict[str, Any] | None) -> bool:
     """Answered, or failed for a reason that is part of the result (step budget, request too
     large). Only rate-limit failures are retried on resume."""
     return bool(row) and not str((row or {}).get("error") or "").startswith("RateLimitError")
 
 
-def _done(row: dict[str, Any] | None) -> bool:
-    return _answered(row) and (row or {}).get("correct") is not None
+def done(row: dict[str, Any] | None) -> bool:
+    return answered(row) and (row or {}).get("correct") is not None
 
 
 def _append(path: Path, row: dict[str, Any]) -> None:
@@ -277,7 +284,7 @@ async def answer_all(
     for index, item in enumerate(items):
         order = names[index % len(names) :] + names[: index % len(names)]
         for framework in order:
-            if _final(existing.get((framework, item.id))):
+            if final(existing.get((framework, item.id))):
                 continue
             meter.reset()
             started = time.perf_counter()
@@ -306,7 +313,7 @@ async def judge_all(
     stopped the pass; rerunning resumes."""
     by_id = {i.id: i for i in items}
     for (framework, qid), row in load_rows(out_path).items():
-        if not _answered(row) or _done(row) or qid not in by_id:
+        if not answered(row) or done(row) or qid not in by_id:
             continue
         meter.reset()
         try:
@@ -383,7 +390,7 @@ def summarize_run(rows: dict[tuple[str, str], dict[str, Any]], frameworks: list[
     same questions. Correctness and faithfulness cover the judged rows (agent errors count as
     incorrect); until the judge pass has run they are reported as pending."""
     ids = sorted({qid for _, qid in rows})
-    paired = [q for q in ids if all(_final(rows.get((f, q))) for f in frameworks)]
+    paired = [q for q in ids if all(final(rows.get((f, q))) for f in frameworks)]
     # Latency, tokens and cost compare like with like: only questions every framework answered
     # without an error (a failed run that stopped early would otherwise look cheap).
     common = [q for q in paired if all(not rows[(f, q)].get("error") for f in frameworks)]

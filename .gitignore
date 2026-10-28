@@ -9,3 +9,4 @@ data/index/
 data/metadata.db
 data/*.tmp
 .DS_Store
+data/cache/

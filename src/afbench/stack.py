@@ -27,7 +27,7 @@ from afbench.embeddings import (
     FastEmbedSparse,
 )
 from afbench.frameworks import baseline, langgraph_impl, llamaindex_impl
-from afbench.transport import Meter, metered_client
+from afbench.transport import Meter, ResponseCache, metered_client
 
 FRAMEWORKS = ("baseline", "langgraph", "llamaindex")
 
@@ -161,6 +161,11 @@ def build_bench(
     from llama_index.llms.openai_like import OpenAILike
 
     meter = Meter()
+    cache = ResponseCache(settings.index_dir.parent / "cache" / "llm") if inner is None else None
+
+    def http() -> httpx.AsyncClient:
+        return metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S, cache=cache)
+
     key, url, model = settings.api_key(), settings.llm_base_url, settings.answer_model
     sql = SqlTool(settings.sqlite_path)
     common: dict[str, Any] = {"max_steps": settings.max_steps, "top_k": settings.top_k}
@@ -171,7 +176,7 @@ def build_bench(
             api_key=key,
             base_url=url,
             max_retries=0,
-            http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),
+            http_client=http(),
         )
         agents["baseline"] = baseline.BaselineAgent(client, model, searchers[MATCHED["baseline"]], sql, **common)
     if "langgraph" in frameworks:
@@ -181,7 +186,7 @@ def build_bench(
             base_url=url,
             temperature=0.0,
             max_retries=0,
-            http_async_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),
+            http_async_client=http(),
         )
         agents["langgraph"] = langgraph_impl.LangGraphAgent(chat, searchers[MATCHED["langgraph"]], sql, **common)
     if "llamaindex" in frameworks:
@@ -195,12 +200,10 @@ def build_bench(
             is_chat_model=True,
             is_function_calling_model=True,
             context_window=131_072,
-            async_http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),  # type: ignore[call-arg]
+            async_http_client=http(),  # type: ignore[call-arg]
         )
         agents["llamaindex"] = llamaindex_impl.LlamaIndexAgent(llm, searchers[MATCHED["llamaindex"]], sql, **common)
-    judge = AsyncOpenAI(
-        api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S)
-    )
+    judge = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=http())
     return Bench(meter, agents, judge)
 
 

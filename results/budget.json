@@ -1,0 +1,34 @@
+{
+  "answer": {
+    "model": "openai/gpt-oss-120b",
+    "pending_runs": [
+      "baseline:q31",
+      "baseline:h01",
+      "langgraph:h01",
+      "llamaindex:h01",
+      "baseline:h02",
+      "langgraph:h02",
+      "llamaindex:h02",
+      "baseline:h03",
+      "langgraph:h03",
+      "llamaindex:h03"
+    ],
+    "estimated_tokens": 185842
+  },
+  "judge": {
+    "model": "qwen/qwen3.8-27b",
+    "calls": 40,
+    "estimated_tokens": 136857,
+    "largest_request_tokens": 5898
+  },
+  "limits": {
+    "daily_tokens_per_model": 200000,
+    "request_tokens": 8000
+  },
+  "fits_one_daily_window": true,
+  "assumptions": [
+    "each pending answer costs as much as the most expensive recorded run of the same question (else of the same category and difficulty)",
+    "judge prompt tokens = prompt characters / 3.5, plus 1000 output tokens",
+    "answers still to be given are judged at the cost of the dearest judge prompt seen so far"
+  ]
+}

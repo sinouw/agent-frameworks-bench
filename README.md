@@ -113,7 +113,7 @@ What keeps the comparison fair:
 
 - **Same inputs.** Every store indexes the same chunks with the same embedding text. One embedder instance serves all three, so query vectors are identical too.
 - **Same tools.** Names, descriptions and pydantic argument schemas are identical, and so is behaviour: each framework's tool wrapper calls the same `ToolBox` methods. Tests assert that all three offer the same three tools and send the same model and temperature.
-- **Same transport.** SDK retries are disabled everywhere. One transport handles HTTP 429s and paces requests against the tokens-per-minute budget, and that waiting is recorded apart from latency. Token counts come from the provider's `usage` field on the wire, not from each framework's own accounting.
+- **Same transport.** SDK retries are disabled everywhere. One transport handles HTTP 429s and paces requests against the tokens-per-minute and requests budgets in Groq's `x-ratelimit-*` headers, and that waiting is recorded apart from latency. Token counts come from the provider's `usage` field on the wire, not from each framework's own accounting.
 - **Same conditions.** Questions run one at a time, and the framework order rotates per question.
 
 ## Reproduce
@@ -125,25 +125,29 @@ cp .env.example .env              # add a GROQ_API_KEY (free tier works)
 uv sync
 uv run afbench index              # embed once + build the three indexes (no key; ~5 min on the laptop above)
 uv run afbench retrieval          # retrieval table (no key)
+uv run afbench budget             # tokens the remaining e2e + judge work will spend, per model (no key)
+uv run afbench probe              # one tiny request per model: is its daily window free?
 uv run afbench e2e                # answer the eval subset with each framework (resumable)
-uv run afbench judge              # grade the answers (resumable)
+uv run afbench judge              # grade the answers, one at a time (resumable)
 uv run afbench report             # results/summary.{md,json}
 uv run afbench ask langgraph "Which PEP introduced the walrus operator?"
 ```
+
+`e2e` and `judge` probe their model first and don't start while its daily window is spent; `--wait-for-quota HOURS` waits for it instead. Every successful completion is cached under `data/cache/llm/`, keyed by the exact request, so a run interrupted mid-question replays the calls it already paid for. A replayed call counts at its original HTTP time, and the row records how many calls were replayed (`replayed_calls`).
 
 `make bench` runs the whole chain. The Dockerfile builds the indexes at image build time. I haven't built the image: there is no Docker on the machine this was made on.
 
 ## Tests and checks
 
 ```bash
-make check     # ruff lint + format check, mypy, pytest (45 tests)
+make check     # ruff lint + format check, mypy, pytest (51 tests)
 ```
 
 The tests run offline:
 
 - Each framework's real agent code runs against a scripted OpenAI-compatible backend, through the same metered transport. The tests cover tool calls, citations, errors, step-budget behaviour and request shape.
 - Each framework's index-and-search path runs on in-memory Qdrant with hashing embedders.
-- Also covered: the transport's back-off, pacing and quota handling; the embedding cache; the eval metrics; and the resumable answer and judge passes.
+- Also covered: the transport's back-off, pacing, quota handling and response cache; the token budget and quota probe; the embedding cache; the eval metrics; and the resumable answer and judge passes.
 
 `make check` passes locally. `.github/workflows/ci.yml` runs the same checks, the keyless retrieval eval with a quality gate, and the Docker build. CI has not run yet, because the repository has not been pushed.
 
