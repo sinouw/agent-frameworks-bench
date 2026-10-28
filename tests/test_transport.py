@@ -32,6 +32,8 @@ def test_durations():
     assert parse_duration("577ms") == pytest.approx(0.577)
     assert parse_duration("1m26.4s") == pytest.approx(86.4)
     assert retry_after(httpx.Headers({"retry-after": "3"}), "Please try again in 7.5s.") == pytest.approx(7.75)
+    assert retry_after(httpx.Headers(), "Please try again in 300ms. Need more tokens?") == pytest.approx(1.25)
+    assert retry_after(httpx.Headers(), "Please try again in 8m55.2s. Need more") == pytest.approx(535.45)
 
 
 async def test_records_usage_and_request_shape():
@@ -77,3 +79,17 @@ async def test_paces_requests_against_the_token_budget():
     assert meter.throttle_s > 10
     meter.reset()
     assert meter.throttle_s == 0 and meter.calls == []
+
+
+async def test_short_daily_quota_waits_are_waited_out_when_allowed():
+    meter, clock = Meter(), FakeClock()
+    error = {"error": {"message": "tokens per day (TPD): Limit 200000. Please try again in 8m55.2s."}}
+    responses = [httpx.Response(429, json=error), httpx.Response(200, json=completion("ok"))]
+    transport = MeteredTransport(
+        meter, httpx.MockTransport(lambda r: responses.pop(0)), daily_wait_s=1800, sleep=clock.sleep, clock=clock
+    )
+    async with httpx.AsyncClient(transport=transport, base_url="https://llm.test") as client:
+        response = await client.post("/chat/completions", json=BODY)
+    assert response.status_code == 200
+    assert meter.quota_exhausted is None
+    assert meter.backoff_s == pytest.approx(535.45)

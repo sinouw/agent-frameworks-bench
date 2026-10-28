@@ -43,6 +43,8 @@ def main(argv: list[str] | None = None) -> int:
     e2e.add_argument("--all", action="store_true", help="all 65 questions instead of the fixed subset")
     e2e.add_argument("--ids", help="comma-separated question ids")
     e2e.add_argument("--frameworks", default=",".join(FRAMEWORKS))
+    judge = sub.add_parser("judge")
+    judge.add_argument("--run", default="main")
     rep = sub.add_parser("report")
     rep.add_argument("--run", default="main")
     sub.add_parser("loc")
@@ -53,6 +55,7 @@ def main(argv: list[str] | None = None) -> int:
 
     settings = get_settings()
     results = settings.results_dir
+    out = results / "e2e" / f"{getattr(args, 'run', 'main')}.jsonl"
     if args.command == "index":
         write_json(results / "index.json", build_indexes(settings))
     elif args.command == "retrieval":
@@ -69,17 +72,12 @@ def main(argv: list[str] | None = None) -> int:
         frameworks = tuple(f for f in args.frameworks.split(",") if f)
         bench = build_bench(settings, open_searchers(settings), frameworks)
         print(f"{len(items)} questions x {len(bench.agents)} frameworks, answer model {settings.answer_model}")
-        completed = asyncio.run(
-            evals.run_e2e(
-                bench.agents,
-                bench.judge,
-                bench.meter,
-                items,
-                settings.answer_model,
-                settings.judge_model,
-                results / "e2e" / f"{args.run}.jsonl",
-            )
-        )
+        completed = asyncio.run(evals.answer_all(bench.agents, bench.meter, items, settings.answer_model, out))
+        return 0 if completed else 3
+    elif args.command == "judge":
+        items = evals.load_golden(settings.golden_path)
+        bench = build_bench(settings, {}, ())
+        completed = asyncio.run(evals.judge_all(bench.judge, bench.meter, items, settings.judge_model, out))
         return 0 if completed else 3
     elif args.command == "report":
         write_json(results / "loc.json", cmd_loc())

@@ -20,12 +20,12 @@ def test_golden_set_and_subset_rule():
         key = (item.category, item.difficulty if item.category == "lookup" else "")
         counts[key] = counts.get(key, 0) + 1
     assert counts == {
-        ("lookup", "core"): 5,
-        ("lookup", "hard"): 5,
-        ("multi_doc", ""): 3,
-        ("metadata_sql", ""): 3,
-        ("calculation", ""): 3,
-        ("unanswerable", ""): 3,
+        ("lookup", "core"): 3,
+        ("lookup", "hard"): 3,
+        ("multi_doc", ""): 2,
+        ("metadata_sql", ""): 2,
+        ("calculation", ""): 2,
+        ("unanswerable", ""): 2,
     }
     assert {i.tool for i in subset if i.category == "metadata_sql"} == {"sql_query"}
 
@@ -68,7 +68,7 @@ class FakeAgent:
         return AgentResult("79 characters [S1].", [ToolUse("search_docs", {"query": question}, "[S1] ...")], [PEP8_HIT])
 
 
-async def test_e2e_runs_all_pairs_and_resumes(tmp_path):
+async def test_answer_and_judge_passes_cover_all_pairs_and_resume(tmp_path):
     items = [evals.GoldenItem("q01", "lookup", "Max line length?", "79", ["pep-0008"])]
     agents = {name: FakeAgent(name) for name in ("baseline", "langgraph", "llamaindex")}
     meter = Meter()
@@ -85,15 +85,19 @@ async def test_e2e_runs_all_pairs_and_resumes(tmp_path):
         http_client=metered_client(meter, httpx.MockTransport(judge_handler)),
     )
     out = tmp_path / "run.jsonl"
-    assert await evals.run_e2e(agents, judge, meter, items, "answer-model", "judge-model", out)
+    assert await evals.answer_all(agents, meter, items, "answer-model", out)
+    assert all(r["correct"] is None for r in evals.load_rows(out).values())
+    assert await evals.judge_all(judge, meter, items, "judge-model", out)
     rows = evals.load_rows(out)
     assert len(rows) == 3 and all(r["correct"] and r["tool_ok"] for r in rows.values())
     assert rows[("langgraph", "q01")]["citation_precision"] == 1.0
     assert "[S1] ..." in judge_bodies[0]["messages"][0]["content"]
 
-    # Resuming does not re-run finished pairs.
-    assert await evals.run_e2e(agents, judge, meter, items, "answer-model", "judge-model", out)
+    # Resuming does not re-run or re-judge finished pairs.
+    assert await evals.answer_all(agents, meter, items, "answer-model", out)
+    assert await evals.judge_all(judge, meter, items, "judge-model", out)
     assert all(a.calls == 1 for a in agents.values())
+    assert len(judge_bodies) == 3
 
     summary = evals.summarize_run(rows, list(agents))
     assert summary["paired_questions"] == ["q01"]

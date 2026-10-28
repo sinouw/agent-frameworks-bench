@@ -8,7 +8,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.7248148148148148,
-      "p50_latency_ms": 74.8
+      "p50_latency_ms": 82.2
     },
     "by_difficulty": {
       "core": {
@@ -19,7 +19,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.8840579710144927,
-        "p50_latency_ms": 76.1
+        "p50_latency_ms": 78.6
       },
       "hard": {
         "questions": 25,
@@ -29,7 +29,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5583333333333333,
-        "p50_latency_ms": 72.2
+        "p50_latency_ms": 82.4
       }
     },
     "rows": [
@@ -39,7 +39,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.1
+        "latency_ms": 85.6
       },
       {
         "id": "q02",
@@ -47,7 +47,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.4
+        "latency_ms": 91.3
       },
       {
         "id": "q03",
@@ -55,7 +55,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 73.6
+        "latency_ms": 77.1
       },
       {
         "id": "q04",
@@ -63,7 +63,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 92.6
+        "latency_ms": 80.9
       },
       {
         "id": "q05",
@@ -71,7 +71,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 88.8
+        "latency_ms": 82.0
       },
       {
         "id": "q06",
@@ -79,7 +79,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.4
+        "latency_ms": 86.1
       },
       {
         "id": "q07",
@@ -87,7 +87,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 93.4
+        "latency_ms": 118.1
       },
       {
         "id": "q08",
@@ -95,7 +95,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 65.4
+        "latency_ms": 83.2
       },
       {
         "id": "q09",
@@ -103,7 +103,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.1
+        "latency_ms": 88.4
       },
       {
         "id": "q10",
@@ -111,7 +111,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.5
+        "latency_ms": 78.6
       },
       {
         "id": "q11",
@@ -119,7 +119,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.3
+        "latency_ms": 75.7
       },
       {
         "id": "q12",
@@ -127,7 +127,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.0
+        "latency_ms": 85.4
       },
       {
         "id": "q13",
@@ -135,7 +135,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.9
+        "latency_ms": 75.2
       },
       {
         "id": "q14",
@@ -143,7 +143,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.1
+        "latency_ms": 78.1
       },
       {
         "id": "q15",
@@ -151,7 +151,7 @@
         "rank": 3,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 64.2
+        "latency_ms": 52.3
       },
       {
         "id": "q16",
@@ -159,7 +159,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.3
+        "latency_ms": 63.0
       },
       {
         "id": "q17",
@@ -167,7 +167,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 71.9
+        "latency_ms": 53.1
       },
       {
         "id": "q18",
@@ -175,7 +175,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 76.4
+        "latency_ms": 62.4
       },
       {
         "id": "q19",
@@ -183,7 +183,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.3
+        "latency_ms": 74.5
       },
       {
         "id": "q20",
@@ -191,7 +191,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.0
+        "latency_ms": 77.8
       },
       {
         "id": "q21",
@@ -199,7 +199,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 69.8
+        "latency_ms": 70.5
       },
       {
         "id": "q22",
@@ -207,7 +207,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.7
+        "latency_ms": 88.0
       },
       {
         "id": "q27",
@@ -215,7 +215,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.2
+        "latency_ms": 82.5
       },
       {
         "id": "h01",
@@ -223,7 +223,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 72.2
+        "latency_ms": 82.4
       },
       {
         "id": "h02",
@@ -231,7 +231,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 68.2
+        "latency_ms": 76.1
       },
       {
         "id": "h03",
@@ -239,7 +239,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 68.9
+        "latency_ms": 81.5
       },
       {
         "id": "h04",
@@ -247,7 +247,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 69.7
+        "latency_ms": 68.8
       },
       {
         "id": "h05",
@@ -255,7 +255,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 68.5
+        "latency_ms": 88.8
       },
       {
         "id": "h06",
@@ -263,7 +263,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 68.7
+        "latency_ms": 74.3
       },
       {
         "id": "h07",
@@ -271,7 +271,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 76.3
+        "latency_ms": 81.7
       },
       {
         "id": "h08",
@@ -279,7 +279,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 67.0
+        "latency_ms": 67.4
       },
       {
         "id": "h09",
@@ -287,7 +287,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.0
+        "latency_ms": 82.4
       },
       {
         "id": "h10",
@@ -295,7 +295,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 69.4
+        "latency_ms": 68.3
       },
       {
         "id": "h11",
@@ -303,7 +303,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 217.2
+        "latency_ms": 82.3
       },
       {
         "id": "h12",
@@ -311,7 +311,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 89.3
+        "latency_ms": 87.0
       },
       {
         "id": "h13",
@@ -319,7 +319,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 66.0
+        "latency_ms": 73.1
       },
       {
         "id": "h14",
@@ -327,7 +327,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 75.2
+        "latency_ms": 77.6
       },
       {
         "id": "h15",
@@ -335,7 +335,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 77.9
+        "latency_ms": 78.3
       },
       {
         "id": "h16",
@@ -343,7 +343,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 74.8
+        "latency_ms": 92.4
       },
       {
         "id": "h17",
@@ -351,7 +351,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.7
+        "latency_ms": 118.4
       },
       {
         "id": "a01",
@@ -359,7 +359,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 66.6
+        "latency_ms": 89.3
       },
       {
         "id": "a02",
@@ -367,7 +367,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 138.4
+        "latency_ms": 117.4
       },
       {
         "id": "a03",
@@ -375,7 +375,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 83.6
+        "latency_ms": 85.7
       },
       {
         "id": "a04",
@@ -383,7 +383,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.4
+        "latency_ms": 103.9
       },
       {
         "id": "a05",
@@ -391,7 +391,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 61.1
+        "latency_ms": 84.3
       },
       {
         "id": "x01",
@@ -399,7 +399,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 57.1
+        "latency_ms": 89.6
       },
       {
         "id": "x02",
@@ -407,7 +407,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 73.5
+        "latency_ms": 113.8
       },
       {
         "id": "x03",
@@ -415,7 +415,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 70.6
+        "latency_ms": 117.3
       }
     ]
   },
@@ -428,7 +428,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.6822222222222222,
-      "p50_latency_ms": 78.7
+      "p50_latency_ms": 81.8
     },
     "by_difficulty": {
       "core": {
@@ -439,7 +439,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.8333333333333334,
-        "p50_latency_ms": 75.9
+        "p50_latency_ms": 88.6
       },
       "hard": {
         "questions": 25,
@@ -449,7 +449,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5242424242424243,
-        "p50_latency_ms": 82.3
+        "p50_latency_ms": 76.7
       }
     },
     "rows": [
@@ -459,7 +459,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.5
+        "latency_ms": 129.9
       },
       {
         "id": "q02",
@@ -467,7 +467,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.6
+        "latency_ms": 100.2
       },
       {
         "id": "q03",
@@ -475,7 +475,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 67.2
+        "latency_ms": 68.4
       },
       {
         "id": "q04",
@@ -483,7 +483,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 75.6
+        "latency_ms": 88.6
       },
       {
         "id": "q05",
@@ -491,7 +491,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 73.8
+        "latency_ms": 90.1
       },
       {
         "id": "q06",
@@ -499,7 +499,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.0
+        "latency_ms": 93.4
       },
       {
         "id": "q07",
@@ -507,7 +507,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.0
+        "latency_ms": 86.7
       },
       {
         "id": "q08",
@@ -515,7 +515,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.9
+        "latency_ms": 91.7
       },
       {
         "id": "q09",
@@ -523,7 +523,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.6
+        "latency_ms": 88.5
       },
       {
         "id": "q10",
@@ -531,7 +531,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 78.8
+        "latency_ms": 95.0
       },
       {
         "id": "q11",
@@ -539,7 +539,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.7
+        "latency_ms": 82.4
       },
       {
         "id": "q12",
@@ -547,7 +547,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 84.5
+        "latency_ms": 89.8
       },
       {
         "id": "q13",
@@ -555,7 +555,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 69.3
+        "latency_ms": 79.0
       },
       {
         "id": "q14",
@@ -563,7 +563,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.0
+        "latency_ms": 82.4
       },
       {
         "id": "q15",
@@ -571,7 +571,7 @@
         "rank": 2,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 69.6
+        "latency_ms": 75.5
       },
       {
         "id": "q16",
@@ -579,7 +579,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.2
+        "latency_ms": 91.9
       },
       {
         "id": "q17",
@@ -587,7 +587,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 78.8
+        "latency_ms": 74.2
       },
       {
         "id": "q18",
@@ -595,7 +595,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 78.8
+        "latency_ms": 92.2
       },
       {
         "id": "q19",
@@ -603,7 +603,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.0
+        "latency_ms": 80.4
       },
       {
         "id": "q20",
@@ -611,7 +611,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 75.4
+        "latency_ms": 86.5
       },
       {
         "id": "q21",
@@ -619,7 +619,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 75.7
+        "latency_ms": 87.8
       },
       {
         "id": "q22",
@@ -627,7 +627,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.0
+        "latency_ms": 94.4
       },
       {
         "id": "q27",
@@ -635,7 +635,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 114.5
+        "latency_ms": 92.8
       },
       {
         "id": "h01",
@@ -643,7 +643,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 99.0
+        "latency_ms": 91.8
       },
       {
         "id": "h02",
@@ -651,7 +651,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.0
+        "latency_ms": 81.5
       },
       {
         "id": "h03",
@@ -659,7 +659,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 70.0
+        "latency_ms": 71.0
       },
       {
         "id": "h04",
@@ -667,7 +667,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.0
+        "latency_ms": 76.7
       },
       {
         "id": "h05",
@@ -675,7 +675,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 99.2
+        "latency_ms": 75.5
       },
       {
         "id": "h06",
@@ -683,7 +683,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 85.0
+        "latency_ms": 86.4
       },
       {
         "id": "h07",
@@ -691,7 +691,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 76.1
+        "latency_ms": 85.1
       },
       {
         "id": "h08",
@@ -699,7 +699,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 63.0
+        "latency_ms": 67.2
       },
       {
         "id": "h09",
@@ -707,7 +707,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.4
+        "latency_ms": 95.7
       },
       {
         "id": "h10",
@@ -715,7 +715,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 70.7
+        "latency_ms": 80.8
       },
       {
         "id": "h11",
@@ -723,7 +723,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 95.8
+        "latency_ms": 79.5
       },
       {
         "id": "h12",
@@ -731,7 +731,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.9
+        "latency_ms": 83.3
       },
       {
         "id": "h13",
@@ -739,7 +739,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 92.8
+        "latency_ms": 56.6
       },
       {
         "id": "h14",
@@ -747,7 +747,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 203.5
+        "latency_ms": 60.9
       },
       {
         "id": "h15",
@@ -755,7 +755,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 98.7
+        "latency_ms": 57.9
       },
       {
         "id": "h16",
@@ -763,7 +763,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 83.6
+        "latency_ms": 58.7
       },
       {
         "id": "h17",
@@ -771,7 +771,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.0
+        "latency_ms": 74.8
       },
       {
         "id": "a01",
@@ -779,7 +779,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 59.5
+        "latency_ms": 62.1
       },
       {
         "id": "a02",
@@ -787,7 +787,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.3
+        "latency_ms": 75.1
       },
       {
         "id": "a03",
@@ -795,7 +795,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.8
+        "latency_ms": 75.9
       },
       {
         "id": "a04",
@@ -803,7 +803,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.3
+        "latency_ms": 77.5
       },
       {
         "id": "a05",
@@ -811,7 +811,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.7
+        "latency_ms": 81.8
       },
       {
         "id": "x01",
@@ -819,7 +819,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 72.1
+        "latency_ms": 73.0
       },
       {
         "id": "x02",
@@ -827,7 +827,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 94.8
+        "latency_ms": 77.8
       },
       {
         "id": "x03",
@@ -835,7 +835,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 84.3
+        "latency_ms": 81.9
       }
     ]
   },
@@ -848,7 +848,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.7155555555555556,
-      "p50_latency_ms": 75.8
+      "p50_latency_ms": 77.5
     },
     "by_difficulty": {
       "core": {
@@ -859,7 +859,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.855072463768116,
-        "p50_latency_ms": 77.1
+        "p50_latency_ms": 79.7
       },
       "hard": {
         "questions": 25,
@@ -869,7 +869,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5696969696969697,
-        "p50_latency_ms": 73.8
+        "p50_latency_ms": 74.7
       }
     },
     "rows": [
@@ -879,7 +879,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 83.0
+        "latency_ms": 88.6
       },
       {
         "id": "q02",
@@ -887,7 +887,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.0
+        "latency_ms": 94.8
       },
       {
         "id": "q03",
@@ -895,7 +895,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 67.0
+        "latency_ms": 74.0
       },
       {
         "id": "q04",
@@ -903,7 +903,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 77.1
+        "latency_ms": 73.9
       },
       {
         "id": "q05",
@@ -911,7 +911,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.5
+        "latency_ms": 80.4
       },
       {
         "id": "q06",
@@ -919,7 +919,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.9
+        "latency_ms": 79.7
       },
       {
         "id": "q07",
@@ -927,7 +927,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.4
+        "latency_ms": 83.6
       },
       {
         "id": "q08",
@@ -935,7 +935,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.4
+        "latency_ms": 77.5
       },
       {
         "id": "q09",
@@ -943,7 +943,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.3
+        "latency_ms": 79.1
       },
       {
         "id": "q10",
@@ -951,7 +951,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 77.1
+        "latency_ms": 80.1
       },
       {
         "id": "q11",
@@ -959,7 +959,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 87.5
+        "latency_ms": 80.1
       },
       {
         "id": "q12",
@@ -967,7 +967,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.6
+        "latency_ms": 83.8
       },
       {
         "id": "q13",
@@ -975,7 +975,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.3
+        "latency_ms": 73.7
       },
       {
         "id": "q14",
@@ -983,7 +983,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.3
+        "latency_ms": 79.0
       },
       {
         "id": "q15",
@@ -991,7 +991,7 @@
         "rank": 3,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 67.1
+        "latency_ms": 72.0
       },
       {
         "id": "q16",
@@ -999,7 +999,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.2
+        "latency_ms": 77.1
       },
       {
         "id": "q17",
@@ -1007,7 +1007,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 72.3
+        "latency_ms": 70.9
       },
       {
         "id": "q18",
@@ -1015,7 +1015,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 78.3
+        "latency_ms": 77.5
       },
       {
         "id": "q19",
@@ -1023,7 +1023,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.8
+        "latency_ms": 80.4
       },
       {
         "id": "q20",
@@ -1031,7 +1031,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 61.2
+        "latency_ms": 74.3
       },
       {
         "id": "q21",
@@ -1039,7 +1039,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 62.5
+        "latency_ms": 79.7
       },
       {
         "id": "q22",
@@ -1047,7 +1047,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 67.3
+        "latency_ms": 83.6
       },
       {
         "id": "q27",
@@ -1055,7 +1055,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 66.5
+        "latency_ms": 87.3
       },
       {
         "id": "h01",
@@ -1063,7 +1063,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 71.8
+        "latency_ms": 86.0
       },
       {
         "id": "h02",
@@ -1071,7 +1071,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.1
+        "latency_ms": 72.3
       },
       {
         "id": "h03",
@@ -1079,7 +1079,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 67.8
+        "latency_ms": 64.9
       },
       {
         "id": "h04",
@@ -1087,7 +1087,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 63.6
+        "latency_ms": 56.8
       },
       {
         "id": "h05",
@@ -1095,7 +1095,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 73.4
+        "latency_ms": 64.7
       },
       {
         "id": "h06",
@@ -1103,7 +1103,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 95.8
+        "latency_ms": 54.6
       },
       {
         "id": "h07",
@@ -1111,7 +1111,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 104.6
+        "latency_ms": 72.1
       },
       {
         "id": "h08",
@@ -1119,7 +1119,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 76.2
+        "latency_ms": 67.4
       },
       {
         "id": "h09",
@@ -1127,7 +1127,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 83.6
+        "latency_ms": 73.1
       },
       {
         "id": "h10",
@@ -1135,7 +1135,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 79.6
+        "latency_ms": 75.3
       },
       {
         "id": "h11",
@@ -1143,7 +1143,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 74.1
+        "latency_ms": 75.8
       },
       {
         "id": "h12",
@@ -1151,7 +1151,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.9
+        "latency_ms": 81.3
       },
       {
         "id": "h13",
@@ -1159,7 +1159,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 64.8
+        "latency_ms": 75.1
       },
       {
         "id": "h14",
@@ -1167,7 +1167,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 74.7
+        "latency_ms": 73.4
       },
       {
         "id": "h15",
@@ -1175,7 +1175,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 74.8
+        "latency_ms": 100.3
       },
       {
         "id": "h16",
@@ -1183,7 +1183,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 78.1
+        "latency_ms": 96.6
       },
       {
         "id": "h17",
@@ -1191,7 +1191,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.3
+        "latency_ms": 90.7
       },
       {
         "id": "a01",
@@ -1199,7 +1199,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 60.7
+        "latency_ms": 65.8
       },
       {
         "id": "a02",
@@ -1207,7 +1207,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.7
+        "latency_ms": 82.3
       },
       {
         "id": "a03",
@@ -1215,7 +1215,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 58.6
+        "latency_ms": 74.6
       },
       {
         "id": "a04",
@@ -1223,7 +1223,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.4
+        "latency_ms": 74.7
       },
       {
         "id": "a05",
@@ -1231,7 +1231,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.5
+        "latency_ms": 80.3
       },
       {
         "id": "x01",
@@ -1239,7 +1239,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 66.8
+        "latency_ms": 70.8
       },
       {
         "id": "x02",
@@ -1247,7 +1247,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 73.8
+        "latency_ms": 84.7
       },
       {
         "id": "x03",
@@ -1255,7 +1255,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 79.5
+        "latency_ms": 96.1
       }
     ]
   },
@@ -1268,7 +1268,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.7248148148148148,
-      "p50_latency_ms": 83.8
+      "p50_latency_ms": 83.5
     },
     "by_difficulty": {
       "core": {
@@ -1279,7 +1279,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.8840579710144927,
-        "p50_latency_ms": 85.4
+        "p50_latency_ms": 83.9
       },
       "hard": {
         "questions": 25,
@@ -1289,7 +1289,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5583333333333333,
-        "p50_latency_ms": 83.7
+        "p50_latency_ms": 80.2
       }
     },
     "rows": [
@@ -1299,7 +1299,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.1
+        "latency_ms": 78.5
       },
       {
         "id": "q02",
@@ -1307,7 +1307,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.5
+        "latency_ms": 85.6
       },
       {
         "id": "q03",
@@ -1315,7 +1315,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 62.2
+        "latency_ms": 85.8
       },
       {
         "id": "q04",
@@ -1323,7 +1323,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 88.8
+        "latency_ms": 89.9
       },
       {
         "id": "q05",
@@ -1331,7 +1331,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.4
+        "latency_ms": 92.5
       },
       {
         "id": "q06",
@@ -1339,7 +1339,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 87.6
+        "latency_ms": 80.3
       },
       {
         "id": "q07",
@@ -1347,7 +1347,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.0
+        "latency_ms": 86.6
       },
       {
         "id": "q08",
@@ -1355,7 +1355,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.9
+        "latency_ms": 102.0
       },
       {
         "id": "q09",
@@ -1363,7 +1363,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 89.9
+        "latency_ms": 87.0
       },
       {
         "id": "q10",
@@ -1371,7 +1371,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.8
+        "latency_ms": 83.1
       },
       {
         "id": "q11",
@@ -1379,7 +1379,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 65.1
+        "latency_ms": 89.3
       },
       {
         "id": "q12",
@@ -1387,7 +1387,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 68.3
+        "latency_ms": 83.3
       },
       {
         "id": "q13",
@@ -1395,7 +1395,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 61.0
+        "latency_ms": 81.0
       },
       {
         "id": "q14",
@@ -1403,7 +1403,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 62.0
+        "latency_ms": 83.9
       },
       {
         "id": "q15",
@@ -1411,7 +1411,7 @@
         "rank": 3,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 63.0
+        "latency_ms": 50.2
       },
       {
         "id": "q16",
@@ -1419,7 +1419,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.5
+        "latency_ms": 85.9
       },
       {
         "id": "q17",
@@ -1427,7 +1427,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 71.6
+        "latency_ms": 65.7
       },
       {
         "id": "q18",
@@ -1435,7 +1435,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 91.7
+        "latency_ms": 66.8
       },
       {
         "id": "q19",
@@ -1443,7 +1443,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 97.8
+        "latency_ms": 90.0
       },
       {
         "id": "q20",
@@ -1451,7 +1451,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 94.9
+        "latency_ms": 83.6
       },
       {
         "id": "q21",
@@ -1459,7 +1459,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 97.4
+        "latency_ms": 73.8
       },
       {
         "id": "q22",
@@ -1467,7 +1467,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 105.8
+        "latency_ms": 82.3
       },
       {
         "id": "q27",
@@ -1475,7 +1475,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 120.7
+        "latency_ms": 84.5
       },
       {
         "id": "h01",
@@ -1483,7 +1483,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 111.3
+        "latency_ms": 85.4
       },
       {
         "id": "h02",
@@ -1491,7 +1491,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 96.4
+        "latency_ms": 78.1
       },
       {
         "id": "h03",
@@ -1499,7 +1499,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 87.8
+        "latency_ms": 73.4
       },
       {
         "id": "h04",
@@ -1507,7 +1507,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 82.0
+        "latency_ms": 77.4
       },
       {
         "id": "h05",
@@ -1515,7 +1515,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 91.9
+        "latency_ms": 83.4
       },
       {
         "id": "h06",
@@ -1523,7 +1523,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 84.1
+        "latency_ms": 83.6
       },
       {
         "id": "h07",
@@ -1531,7 +1531,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 98.3
+        "latency_ms": 84.1
       },
       {
         "id": "h08",
@@ -1539,7 +1539,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 78.5
+        "latency_ms": 66.1
       },
       {
         "id": "h09",
@@ -1547,7 +1547,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 110.0
+        "latency_ms": 78.1
       },
       {
         "id": "h10",
@@ -1555,7 +1555,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 77.4
+        "latency_ms": 69.6
       },
       {
         "id": "h11",
@@ -1563,7 +1563,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 79.9
+        "latency_ms": 79.5
       },
       {
         "id": "h12",
@@ -1571,7 +1571,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.7
+        "latency_ms": 80.1
       },
       {
         "id": "h13",
@@ -1579,7 +1579,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 67.5
+        "latency_ms": 85.9
       },
       {
         "id": "h14",
@@ -1587,7 +1587,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 74.3
+        "latency_ms": 90.0
       },
       {
         "id": "h15",
@@ -1595,7 +1595,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 81.3
+        "latency_ms": 78.4
       },
       {
         "id": "h16",
@@ -1603,7 +1603,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 83.9
+        "latency_ms": 84.3
       },
       {
         "id": "h17",
@@ -1611,7 +1611,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.5
+        "latency_ms": 85.1
       },
       {
         "id": "a01",
@@ -1619,7 +1619,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 70.5
+        "latency_ms": 71.1
       },
       {
         "id": "a02",
@@ -1627,7 +1627,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 101.0
+        "latency_ms": 84.8
       },
       {
         "id": "a03",
@@ -1635,7 +1635,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 83.7
+        "latency_ms": 73.5
       },
       {
         "id": "a04",
@@ -1643,7 +1643,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 94.2
+        "latency_ms": 85.9
       },
       {
         "id": "a05",
@@ -1651,7 +1651,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 91.5
+        "latency_ms": 90.0
       },
       {
         "id": "x01",
@@ -1659,7 +1659,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 76.3
+        "latency_ms": 77.5
       },
       {
         "id": "x02",
@@ -1667,7 +1667,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 84.4
+        "latency_ms": 80.2
       },
       {
         "id": "x03",
@@ -1675,7 +1675,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 78.4
+        "latency_ms": 84.4
       }
     ]
   },
@@ -1688,7 +1688,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.7225925925925926,
-      "p50_latency_ms": 80.6
+      "p50_latency_ms": 82.2
     },
     "by_difficulty": {
       "core": {
@@ -1699,7 +1699,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.8768115942028986,
-        "p50_latency_ms": 76.1
+        "p50_latency_ms": 80.5
       },
       "hard": {
         "questions": 25,
@@ -1709,7 +1709,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5613636363636364,
-        "p50_latency_ms": 83.7
+        "p50_latency_ms": 84.7
       }
     },
     "rows": [
@@ -1719,7 +1719,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 102.7
+        "latency_ms": 81.8
       },
       {
         "id": "q02",
@@ -1727,7 +1727,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.1
+        "latency_ms": 83.3
       },
       {
         "id": "q03",
@@ -1735,7 +1735,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 67.2
+        "latency_ms": 72.9
       },
       {
         "id": "q04",
@@ -1743,7 +1743,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 81.7
+        "latency_ms": 69.6
       },
       {
         "id": "q05",
@@ -1751,7 +1751,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 90.6
+        "latency_ms": 64.1
       },
       {
         "id": "q06",
@@ -1759,7 +1759,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 178.8
+        "latency_ms": 58.1
       },
       {
         "id": "q07",
@@ -1767,7 +1767,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.7
+        "latency_ms": 64.7
       },
       {
         "id": "q08",
@@ -1775,7 +1775,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.7
+        "latency_ms": 80.5
       },
       {
         "id": "q09",
@@ -1783,7 +1783,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.0
+        "latency_ms": 76.4
       },
       {
         "id": "q10",
@@ -1791,7 +1791,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 71.4
+        "latency_ms": 84.7
       },
       {
         "id": "q11",
@@ -1799,7 +1799,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 68.4
+        "latency_ms": 80.9
       },
       {
         "id": "q12",
@@ -1807,7 +1807,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 113.1
+        "latency_ms": 90.7
       },
       {
         "id": "q13",
@@ -1815,7 +1815,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 160.2
+        "latency_ms": 74.2
       },
       {
         "id": "q14",
@@ -1823,7 +1823,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 110.8
+        "latency_ms": 78.8
       },
       {
         "id": "q15",
@@ -1831,7 +1831,7 @@
         "rank": 3,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 60.1
+        "latency_ms": 69.5
       },
       {
         "id": "q16",
@@ -1839,7 +1839,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.1
+        "latency_ms": 85.8
       },
       {
         "id": "q17",
@@ -1847,7 +1847,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 68.4
+        "latency_ms": 77.6
       },
       {
         "id": "q18",
@@ -1855,7 +1855,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 70.2
+        "latency_ms": 75.4
       },
       {
         "id": "q19",
@@ -1863,7 +1863,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 84.3
+        "latency_ms": 94.2
       },
       {
         "id": "q20",
@@ -1871,7 +1871,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.1
+        "latency_ms": 88.8
       },
       {
         "id": "q21",
@@ -1879,7 +1879,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 69.2
+        "latency_ms": 85.8
       },
       {
         "id": "q22",
@@ -1887,7 +1887,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.4
+        "latency_ms": 86.0
       },
       {
         "id": "q27",
@@ -1895,7 +1895,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.5
+        "latency_ms": 106.0
       },
       {
         "id": "h01",
@@ -1903,10 +1903,90 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 96.9
+        "latency_ms": 84.7
       },
       {
         "id": "h02",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 88.4
+      },
+      {
+        "id": "h03",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 108.9
+      },
+      {
+        "id": "h04",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 93.1
+      },
+      {
+        "id": "h05",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 5,
+        "has_evidence": true,
+        "latency_ms": 84.3
+      },
+      {
+        "id": "h06",
+        "difficulty": "hard",
+        "rank": 2,
+        "evidence_rank": 5,
+        "has_evidence": true,
+        "latency_ms": 93.5
+      },
+      {
+        "id": "h07",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 97.0
+      },
+      {
+        "id": "h08",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 74.7
+      },
+      {
+        "id": "h09",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 80.2
+      },
+      {
+        "id": "h10",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 106.6
+      },
+      {
+        "id": "h11",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 97.8
+      },
+      {
+        "id": "h12",
         "difficulty": "hard",
         "rank": 1,
         "evidence_rank": 1,
@@ -1914,92 +1994,12 @@
         "latency_ms": 90.3
       },
       {
-        "id": "h03",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 77.2
-      },
-      {
-        "id": "h04",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 92.9
-      },
-      {
-        "id": "h05",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 5,
-        "has_evidence": true,
-        "latency_ms": 100.4
-      },
-      {
-        "id": "h06",
-        "difficulty": "hard",
-        "rank": 2,
-        "evidence_rank": 5,
-        "has_evidence": true,
-        "latency_ms": 118.7
-      },
-      {
-        "id": "h07",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 101.4
-      },
-      {
-        "id": "h08",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 66.0
-      },
-      {
-        "id": "h09",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 82.2
-      },
-      {
-        "id": "h10",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 60.6
-      },
-      {
-        "id": "h11",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 62.1
-      },
-      {
-        "id": "h12",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 68.9
-      },
-      {
         "id": "h13",
         "difficulty": "hard",
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 87.2
+        "latency_ms": 98.5
       },
       {
         "id": "h14",
@@ -2007,7 +2007,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 177.8
+        "latency_ms": 107.1
       },
       {
         "id": "h15",
@@ -2015,7 +2015,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 79.6
+        "latency_ms": 86.8
       },
       {
         "id": "h16",
@@ -2023,7 +2023,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 89.7
+        "latency_ms": 59.7
       },
       {
         "id": "h17",
@@ -2031,7 +2031,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.8
+        "latency_ms": 69.9
       },
       {
         "id": "a01",
@@ -2039,7 +2039,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 65.9
+        "latency_ms": 47.0
       },
       {
         "id": "a02",
@@ -2047,7 +2047,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.2
+        "latency_ms": 60.2
       },
       {
         "id": "a03",
@@ -2055,427 +2055,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.2
-      },
-      {
-        "id": "a04",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 83.7
-      },
-      {
-        "id": "a05",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 129.9
-      },
-      {
-        "id": "x01",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": false,
-        "latency_ms": 118.9
-      },
-      {
-        "id": "x02",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": false,
-        "latency_ms": 83.2
-      },
-      {
-        "id": "x03",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": false,
-        "latency_ms": 76.5
-      }
-    ]
-  },
-  "llamaindex: 20 candidates": {
-    "summary": {
-      "questions": 48,
-      "hit_at_1": 0.9583333333333334,
-      "hit_at_5": 1.0,
-      "mrr": 0.9739583333333334,
-      "evidence_questions": 45,
-      "evidence_hit_at_5": 0.9111111111111111,
-      "evidence_mrr": 0.7403703703703705,
-      "p50_latency_ms": 81.1
-    },
-    "by_difficulty": {
-      "core": {
-        "questions": 23,
-        "hit_at_1": 0.9565217391304348,
-        "hit_at_5": 1.0,
-        "mrr": 0.967391304347826,
-        "evidence_questions": 23,
-        "evidence_hit_at_5": 1.0,
-        "evidence_mrr": 0.9021739130434783,
-        "p50_latency_ms": 81.1
-      },
-      "hard": {
-        "questions": 25,
-        "hit_at_1": 0.96,
-        "hit_at_5": 1.0,
-        "mrr": 0.98,
-        "evidence_questions": 22,
-        "evidence_hit_at_5": 0.8181818181818182,
-        "evidence_mrr": 0.5712121212121212,
-        "p50_latency_ms": 81.1
-      }
-    },
-    "rows": [
-      {
-        "id": "q01",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 81.5
-      },
-      {
-        "id": "q02",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 83.0
-      },
-      {
-        "id": "q03",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 70.0
-      },
-      {
-        "id": "q04",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 78.5
-      },
-      {
-        "id": "q05",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 79.3
-      },
-      {
-        "id": "q06",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 84.8
-      },
-      {
-        "id": "q07",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 93.5
-      },
-      {
-        "id": "q08",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 80.3
-      },
-      {
-        "id": "q09",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 77.8
-      },
-      {
-        "id": "q10",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 90.0
-      },
-      {
-        "id": "q11",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 81.1
-      },
-      {
-        "id": "q12",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 84.3
-      },
-      {
-        "id": "q13",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 77.0
-      },
-      {
-        "id": "q14",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 77.2
-      },
-      {
-        "id": "q15",
-        "difficulty": "core",
-        "rank": 4,
-        "evidence_rank": 4,
-        "has_evidence": true,
-        "latency_ms": 63.4
-      },
-      {
-        "id": "q16",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 83.1
-      },
-      {
-        "id": "q17",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 91.1
-      },
-      {
-        "id": "q18",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 132.7
-      },
-      {
-        "id": "q19",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 76.6
-      },
-      {
-        "id": "q20",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 78.7
-      },
-      {
-        "id": "q21",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 76.3
-      },
-      {
-        "id": "q22",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 82.0
-      },
-      {
-        "id": "q27",
-        "difficulty": "core",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 97.7
-      },
-      {
-        "id": "h01",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 81.9
-      },
-      {
-        "id": "h02",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 74.6
-      },
-      {
-        "id": "h03",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 74.0
-      },
-      {
-        "id": "h04",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 72.3
-      },
-      {
-        "id": "h05",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 5,
-        "has_evidence": true,
-        "latency_ms": 83.0
-      },
-      {
-        "id": "h06",
-        "difficulty": "hard",
-        "rank": 2,
-        "evidence_rank": 4,
-        "has_evidence": true,
-        "latency_ms": 85.5
-      },
-      {
-        "id": "h07",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 2,
-        "has_evidence": true,
-        "latency_ms": 116.0
-      },
-      {
-        "id": "h08",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 3,
-        "has_evidence": true,
-        "latency_ms": 165.3
-      },
-      {
-        "id": "h09",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 91.7
-      },
-      {
-        "id": "h10",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 64.9
-      },
-      {
-        "id": "h11",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 71.7
-      },
-      {
-        "id": "h12",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 99.8
-      },
-      {
-        "id": "h13",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 84.4
-      },
-      {
-        "id": "h14",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 4,
-        "has_evidence": true,
-        "latency_ms": 78.9
-      },
-      {
-        "id": "h15",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 3,
-        "has_evidence": true,
-        "latency_ms": 91.1
-      },
-      {
-        "id": "h16",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": null,
-        "has_evidence": true,
-        "latency_ms": 192.7
-      },
-      {
-        "id": "h17",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 78.6
-      },
-      {
-        "id": "a01",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 5,
-        "has_evidence": true,
-        "latency_ms": 79.2
-      },
-      {
-        "id": "a02",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 87.9
-      },
-      {
-        "id": "a03",
-        "difficulty": "hard",
-        "rank": 1,
-        "evidence_rank": 1,
-        "has_evidence": true,
-        "latency_ms": 67.9
+        "latency_ms": 69.2
       },
       {
         "id": "a04",
@@ -2491,7 +2071,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 97.5
+        "latency_ms": 80.9
       },
       {
         "id": "x01",
@@ -2499,7 +2079,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 81.1
+        "latency_ms": 72.8
       },
       {
         "id": "x02",
@@ -2507,7 +2087,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 77.9
+        "latency_ms": 86.8
       },
       {
         "id": "x03",
@@ -2515,7 +2095,427 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 74.5
+        "latency_ms": 82.6
+      }
+    ]
+  },
+  "llamaindex: 20 candidates": {
+    "summary": {
+      "questions": 48,
+      "hit_at_1": 0.9583333333333334,
+      "hit_at_5": 1.0,
+      "mrr": 0.9739583333333334,
+      "evidence_questions": 45,
+      "evidence_hit_at_5": 0.9111111111111111,
+      "evidence_mrr": 0.7403703703703705,
+      "p50_latency_ms": 95.4
+    },
+    "by_difficulty": {
+      "core": {
+        "questions": 23,
+        "hit_at_1": 0.9565217391304348,
+        "hit_at_5": 1.0,
+        "mrr": 0.967391304347826,
+        "evidence_questions": 23,
+        "evidence_hit_at_5": 1.0,
+        "evidence_mrr": 0.9021739130434783,
+        "p50_latency_ms": 92.7
+      },
+      "hard": {
+        "questions": 25,
+        "hit_at_1": 0.96,
+        "hit_at_5": 1.0,
+        "mrr": 0.98,
+        "evidence_questions": 22,
+        "evidence_hit_at_5": 0.8181818181818182,
+        "evidence_mrr": 0.5712121212121212,
+        "p50_latency_ms": 105.7
+      }
+    },
+    "rows": [
+      {
+        "id": "q01",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 84.5
+      },
+      {
+        "id": "q02",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 85.1
+      },
+      {
+        "id": "q03",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 99.7
+      },
+      {
+        "id": "q04",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 91.1
+      },
+      {
+        "id": "q05",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 92.7
+      },
+      {
+        "id": "q06",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 108.1
+      },
+      {
+        "id": "q07",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 90.0
+      },
+      {
+        "id": "q08",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 102.6
+      },
+      {
+        "id": "q09",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 99.2
+      },
+      {
+        "id": "q10",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 112.2
+      },
+      {
+        "id": "q11",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 102.6
+      },
+      {
+        "id": "q12",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 96.1
+      },
+      {
+        "id": "q13",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 94.7
+      },
+      {
+        "id": "q14",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 93.5
+      },
+      {
+        "id": "q15",
+        "difficulty": "core",
+        "rank": 4,
+        "evidence_rank": 4,
+        "has_evidence": true,
+        "latency_ms": 76.9
+      },
+      {
+        "id": "q16",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 126.2
+      },
+      {
+        "id": "q17",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 84.0
+      },
+      {
+        "id": "q18",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 89.3
+      },
+      {
+        "id": "q19",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 88.9
+      },
+      {
+        "id": "q20",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 94.5
+      },
+      {
+        "id": "q21",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 85.2
+      },
+      {
+        "id": "q22",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 84.9
+      },
+      {
+        "id": "q27",
+        "difficulty": "core",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 91.2
+      },
+      {
+        "id": "h01",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 74.8
+      },
+      {
+        "id": "h02",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 113.2
+      },
+      {
+        "id": "h03",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 105.8
+      },
+      {
+        "id": "h04",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 119.0
+      },
+      {
+        "id": "h05",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 5,
+        "has_evidence": true,
+        "latency_ms": 291.6
+      },
+      {
+        "id": "h06",
+        "difficulty": "hard",
+        "rank": 2,
+        "evidence_rank": 4,
+        "has_evidence": true,
+        "latency_ms": 170.5
+      },
+      {
+        "id": "h07",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 2,
+        "has_evidence": true,
+        "latency_ms": 144.8
+      },
+      {
+        "id": "h08",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 3,
+        "has_evidence": true,
+        "latency_ms": 133.3
+      },
+      {
+        "id": "h09",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 132.0
+      },
+      {
+        "id": "h10",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 90.5
+      },
+      {
+        "id": "h11",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 97.8
+      },
+      {
+        "id": "h12",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 100.5
+      },
+      {
+        "id": "h13",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 114.7
+      },
+      {
+        "id": "h14",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 4,
+        "has_evidence": true,
+        "latency_ms": 158.3
+      },
+      {
+        "id": "h15",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 3,
+        "has_evidence": true,
+        "latency_ms": 109.3
+      },
+      {
+        "id": "h16",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": true,
+        "latency_ms": 111.9
+      },
+      {
+        "id": "h17",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 105.7
+      },
+      {
+        "id": "a01",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 5,
+        "has_evidence": true,
+        "latency_ms": 78.4
+      },
+      {
+        "id": "a02",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 98.4
+      },
+      {
+        "id": "a03",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 91.6
+      },
+      {
+        "id": "a04",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 83.7
+      },
+      {
+        "id": "a05",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": 1,
+        "has_evidence": true,
+        "latency_ms": 78.6
+      },
+      {
+        "id": "x01",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": false,
+        "latency_ms": 69.5
+      },
+      {
+        "id": "x02",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": false,
+        "latency_ms": 82.6
+      },
+      {
+        "id": "x03",
+        "difficulty": "hard",
+        "rank": 1,
+        "evidence_rank": null,
+        "has_evidence": false,
+        "latency_ms": 84.3
       }
     ]
   },
@@ -2528,7 +2528,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.9111111111111111,
       "evidence_mrr": 0.7403703703703705,
-      "p50_latency_ms": 85.6
+      "p50_latency_ms": 74.3
     },
     "by_difficulty": {
       "core": {
@@ -2539,7 +2539,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.9021739130434783,
-        "p50_latency_ms": 85.4
+        "p50_latency_ms": 76.8
       },
       "hard": {
         "questions": 25,
@@ -2549,7 +2549,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.8181818181818182,
         "evidence_mrr": 0.5712121212121212,
-        "p50_latency_ms": 85.8
+        "p50_latency_ms": 73.6
       }
     },
     "rows": [
@@ -2559,7 +2559,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 73.9
+        "latency_ms": 78.8
       },
       {
         "id": "q02",
@@ -2567,7 +2567,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.0
+        "latency_ms": 78.2
       },
       {
         "id": "q03",
@@ -2575,7 +2575,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.2
+        "latency_ms": 69.3
       },
       {
         "id": "q04",
@@ -2583,7 +2583,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 88.0
+        "latency_ms": 74.0
       },
       {
         "id": "q05",
@@ -2591,7 +2591,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.8
+        "latency_ms": 65.3
       },
       {
         "id": "q06",
@@ -2599,7 +2599,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 105.3
+        "latency_ms": 80.1
       },
       {
         "id": "q07",
@@ -2607,7 +2607,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 95.1
+        "latency_ms": 76.8
       },
       {
         "id": "q08",
@@ -2615,7 +2615,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 103.0
+        "latency_ms": 87.6
       },
       {
         "id": "q09",
@@ -2623,7 +2623,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 198.6
+        "latency_ms": 81.3
       },
       {
         "id": "q10",
@@ -2631,7 +2631,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 88.7
+        "latency_ms": 80.3
       },
       {
         "id": "q11",
@@ -2639,7 +2639,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.5
+        "latency_ms": 83.5
       },
       {
         "id": "q12",
@@ -2647,7 +2647,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 87.0
+        "latency_ms": 83.5
       },
       {
         "id": "q13",
@@ -2655,7 +2655,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 75.0
+        "latency_ms": 72.0
       },
       {
         "id": "q14",
@@ -2663,7 +2663,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.4
+        "latency_ms": 74.2
       },
       {
         "id": "q15",
@@ -2671,7 +2671,7 @@
         "rank": 4,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 83.5
+        "latency_ms": 65.1
       },
       {
         "id": "q16",
@@ -2679,7 +2679,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 99.3
+        "latency_ms": 79.3
       },
       {
         "id": "q17",
@@ -2687,7 +2687,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 76.7
+        "latency_ms": 71.3
       },
       {
         "id": "q18",
@@ -2695,7 +2695,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 86.1
+        "latency_ms": 76.9
       },
       {
         "id": "q19",
@@ -2703,7 +2703,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 88.1
+        "latency_ms": 74.5
       },
       {
         "id": "q20",
@@ -2711,7 +2711,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.1
+        "latency_ms": 74.1
       },
       {
         "id": "q21",
@@ -2719,7 +2719,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 90.1
+        "latency_ms": 71.7
       },
       {
         "id": "q22",
@@ -2727,7 +2727,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.4
+        "latency_ms": 76.5
       },
       {
         "id": "q27",
@@ -2735,7 +2735,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.2
+        "latency_ms": 81.0
       },
       {
         "id": "h01",
@@ -2743,7 +2743,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 72.8
+        "latency_ms": 75.6
       },
       {
         "id": "h02",
@@ -2751,7 +2751,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.5
+        "latency_ms": 71.2
       },
       {
         "id": "h03",
@@ -2759,7 +2759,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 85.1
+        "latency_ms": 67.4
       },
       {
         "id": "h04",
@@ -2767,7 +2767,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.2
+        "latency_ms": 70.1
       },
       {
         "id": "h05",
@@ -2775,7 +2775,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 82.8
+        "latency_ms": 73.8
       },
       {
         "id": "h06",
@@ -2783,7 +2783,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 89.0
+        "latency_ms": 72.3
       },
       {
         "id": "h07",
@@ -2791,7 +2791,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 93.2
+        "latency_ms": 74.2
       },
       {
         "id": "h08",
@@ -2799,7 +2799,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 77.0
+        "latency_ms": 68.7
       },
       {
         "id": "h09",
@@ -2807,7 +2807,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 88.5
+        "latency_ms": 78.4
       },
       {
         "id": "h10",
@@ -2815,7 +2815,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 76.4
+        "latency_ms": 69.5
       },
       {
         "id": "h11",
@@ -2823,7 +2823,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 88.4
+        "latency_ms": 79.5
       },
       {
         "id": "h12",
@@ -2831,7 +2831,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 118.4
+        "latency_ms": 75.0
       },
       {
         "id": "h13",
@@ -2839,7 +2839,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 139.7
+        "latency_ms": 71.2
       },
       {
         "id": "h14",
@@ -2847,7 +2847,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 75.5
+        "latency_ms": 80.5
       },
       {
         "id": "h15",
@@ -2855,7 +2855,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 100.3
+        "latency_ms": 88.9
       },
       {
         "id": "h16",
@@ -2863,7 +2863,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 96.8
+        "latency_ms": 79.2
       },
       {
         "id": "h17",
@@ -2871,7 +2871,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 187.6
+        "latency_ms": 73.6
       },
       {
         "id": "a01",
@@ -2879,7 +2879,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 66.8
+        "latency_ms": 59.8
       },
       {
         "id": "a02",
@@ -2887,7 +2887,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.6
+        "latency_ms": 79.1
       },
       {
         "id": "a03",
@@ -2895,7 +2895,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.6
+        "latency_ms": 62.5
       },
       {
         "id": "a04",
@@ -2903,7 +2903,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 86.9
+        "latency_ms": 65.7
       },
       {
         "id": "a05",
@@ -2911,7 +2911,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 74.0
+        "latency_ms": 61.9
       },
       {
         "id": "x01",
@@ -2919,7 +2919,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 75.7
+        "latency_ms": 67.5
       },
       {
         "id": "x02",
@@ -2927,7 +2927,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 104.7
+        "latency_ms": 78.1
       },
       {
         "id": "x03",
@@ -2935,7 +2935,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 85.8
+        "latency_ms": 80.5
       }
     ]
   },
@@ -2948,7 +2948,7 @@
       "evidence_questions": 45,
       "evidence_hit_at_5": 0.8888888888888888,
       "evidence_mrr": 0.7248148148148148,
-      "p50_latency_ms": 77.2
+      "p50_latency_ms": 84.7
     },
     "by_difficulty": {
       "core": {
@@ -2959,7 +2959,7 @@
         "evidence_questions": 23,
         "evidence_hit_at_5": 1.0,
         "evidence_mrr": 0.8840579710144927,
-        "p50_latency_ms": 77.1
+        "p50_latency_ms": 83.2
       },
       "hard": {
         "questions": 25,
@@ -2969,7 +2969,7 @@
         "evidence_questions": 22,
         "evidence_hit_at_5": 0.7727272727272727,
         "evidence_mrr": 0.5583333333333333,
-        "p50_latency_ms": 77.4
+        "p50_latency_ms": 86.6
       }
     },
     "rows": [
@@ -2979,7 +2979,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 83.7
+        "latency_ms": 72.9
       },
       {
         "id": "q02",
@@ -2987,7 +2987,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 73.8
+        "latency_ms": 78.6
       },
       {
         "id": "q03",
@@ -2995,7 +2995,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 66.6
+        "latency_ms": 71.3
       },
       {
         "id": "q04",
@@ -3003,7 +3003,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 96.9
+        "latency_ms": 88.4
       },
       {
         "id": "q05",
@@ -3011,7 +3011,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.6
+        "latency_ms": 80.2
       },
       {
         "id": "q06",
@@ -3019,7 +3019,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.3
+        "latency_ms": 89.7
       },
       {
         "id": "q07",
@@ -3027,7 +3027,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 79.1
+        "latency_ms": 83.2
       },
       {
         "id": "q08",
@@ -3035,7 +3035,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.6
+        "latency_ms": 92.1
       },
       {
         "id": "q09",
@@ -3043,7 +3043,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.1
+        "latency_ms": 93.4
       },
       {
         "id": "q10",
@@ -3051,7 +3051,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 71.5
+        "latency_ms": 93.0
       },
       {
         "id": "q11",
@@ -3059,7 +3059,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 88.4
+        "latency_ms": 90.2
       },
       {
         "id": "q12",
@@ -3067,7 +3067,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 77.1
+        "latency_ms": 91.2
       },
       {
         "id": "q13",
@@ -3075,7 +3075,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.4
+        "latency_ms": 71.9
       },
       {
         "id": "q14",
@@ -3083,7 +3083,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.7
+        "latency_ms": 80.3
       },
       {
         "id": "q15",
@@ -3091,7 +3091,7 @@
         "rank": 3,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 64.2
+        "latency_ms": 79.7
       },
       {
         "id": "q16",
@@ -3099,7 +3099,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 80.3
+        "latency_ms": 110.6
       },
       {
         "id": "q17",
@@ -3107,7 +3107,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 75.6
+        "latency_ms": 110.4
       },
       {
         "id": "q18",
@@ -3115,7 +3115,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 88.6
+        "latency_ms": 81.1
       },
       {
         "id": "q19",
@@ -3123,7 +3123,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.6
+        "latency_ms": 83.6
       },
       {
         "id": "q20",
@@ -3131,7 +3131,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 90.6
+        "latency_ms": 80.9
       },
       {
         "id": "q21",
@@ -3139,7 +3139,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 88.4
+        "latency_ms": 78.8
       },
       {
         "id": "q22",
@@ -3147,7 +3147,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 76.4
+        "latency_ms": 82.7
       },
       {
         "id": "q27",
@@ -3155,7 +3155,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 70.6
+        "latency_ms": 85.5
       },
       {
         "id": "h01",
@@ -3163,7 +3163,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 66.6
+        "latency_ms": 83.5
       },
       {
         "id": "h02",
@@ -3171,7 +3171,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 59.5
+        "latency_ms": 101.2
       },
       {
         "id": "h03",
@@ -3179,7 +3179,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 58.3
+        "latency_ms": 85.3
       },
       {
         "id": "h04",
@@ -3187,7 +3187,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 69.8
+        "latency_ms": 76.7
       },
       {
         "id": "h05",
@@ -3195,7 +3195,7 @@
         "rank": 1,
         "evidence_rank": 5,
         "has_evidence": true,
-        "latency_ms": 77.8
+        "latency_ms": 76.5
       },
       {
         "id": "h06",
@@ -3203,7 +3203,7 @@
         "rank": 2,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 81.3
+        "latency_ms": 78.2
       },
       {
         "id": "h07",
@@ -3211,7 +3211,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 86.1
+        "latency_ms": 81.7
       },
       {
         "id": "h08",
@@ -3219,7 +3219,7 @@
         "rank": 1,
         "evidence_rank": 2,
         "has_evidence": true,
-        "latency_ms": 77.1
+        "latency_ms": 76.9
       },
       {
         "id": "h09",
@@ -3227,7 +3227,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 96.1
+        "latency_ms": 103.8
       },
       {
         "id": "h10",
@@ -3235,7 +3235,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 82.8
+        "latency_ms": 111.6
       },
       {
         "id": "h11",
@@ -3243,7 +3243,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 217.5
+        "latency_ms": 115.1
       },
       {
         "id": "h12",
@@ -3251,7 +3251,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 81.9
+        "latency_ms": 93.4
       },
       {
         "id": "h13",
@@ -3259,7 +3259,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 72.4
+        "latency_ms": 88.0
       },
       {
         "id": "h14",
@@ -3267,7 +3267,7 @@
         "rank": 1,
         "evidence_rank": 4,
         "has_evidence": true,
-        "latency_ms": 75.1
+        "latency_ms": 86.6
       },
       {
         "id": "h15",
@@ -3275,7 +3275,7 @@
         "rank": 1,
         "evidence_rank": 3,
         "has_evidence": true,
-        "latency_ms": 75.0
+        "latency_ms": 89.2
       },
       {
         "id": "h16",
@@ -3283,7 +3283,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 85.8
+        "latency_ms": 101.8
       },
       {
         "id": "h17",
@@ -3291,7 +3291,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 72.0
+        "latency_ms": 98.8
       },
       {
         "id": "a01",
@@ -3299,7 +3299,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": true,
-        "latency_ms": 54.8
+        "latency_ms": 81.1
       },
       {
         "id": "a02",
@@ -3307,7 +3307,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 78.7
+        "latency_ms": 92.2
       },
       {
         "id": "a03",
@@ -3315,7 +3315,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 100.1
+        "latency_ms": 76.3
       },
       {
         "id": "a04",
@@ -3323,7 +3323,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 96.0
+        "latency_ms": 84.1
       },
       {
         "id": "a05",
@@ -3331,7 +3331,7 @@
         "rank": 1,
         "evidence_rank": 1,
         "has_evidence": true,
-        "latency_ms": 98.9
+        "latency_ms": 81.8
       },
       {
         "id": "x01",
@@ -3339,7 +3339,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 73.4
+        "latency_ms": 80.5
       },
       {
         "id": "x02",
@@ -3347,7 +3347,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 77.4
+        "latency_ms": 91.3
       },
       {
         "id": "x03",
@@ -3355,7 +3355,7 @@
         "rank": 1,
         "evidence_rank": null,
         "has_evidence": false,
-        "latency_ms": 76.0
+        "latency_ms": 100.7
       }
     ]
   }

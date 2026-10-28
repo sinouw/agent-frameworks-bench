@@ -64,3 +64,10 @@ def test_toolbox_logs_calls_and_resolves_citations(metadata_db):
     result = box.result("79 characters [S1] [S9]")
     assert [t.name for t in result.tools] == ["search_docs", "search_docs", "calculator"]
     assert [h.doc_id for h in result.cited] == ["pep-0008"]  # [S9] doesn't resolve
+
+
+def test_errors_are_redacted(metadata_db):
+    box = ToolBox(StubSearcher([]), SqlTool(metadata_db))
+    result = box.result("", error="429 for organization `org_0123456789abcdef` key gsk_abcdef123456")
+    assert result.error is not None
+    assert "org_0123" not in result.error and "gsk_" not in result.error

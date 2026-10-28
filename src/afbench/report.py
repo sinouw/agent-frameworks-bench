@@ -11,6 +11,7 @@ from afbench.stack import FRAMEWORKS, MATCHED
 
 # USD per 1M tokens (input, output), from console.groq.com/docs/models, read 2026-10-28.
 PRICES_PER_MTOK: dict[str, tuple[float, float]] = {
+    "openai/gpt-oss-120b": (0.15, 0.60),
     "openai/gpt-oss-20b": (0.075, 0.30),
     "qwen/qwen3.8-27b": (0.80, 4.00),
 }
@@ -63,14 +64,21 @@ def markdown(summary: dict[str, Any]) -> str:
         n = len(e2e["paired_questions"])
         lines += [
             f"## End to end ({n} questions, each answered by all three)\n",
+            f"Latency, LLM calls, tokens, prompt size and cost cover the {len(e2e['efficiency_questions'])} questions "
+            "that all three answered without an error.\n",
             "| Framework | Correct | Faithful | Citation precision | Tool selection | p50 / p95 latency | "
             "p50 non-LLM time | LLM calls | Tokens in / out | Prompt chars sent | Cost / question | Errors | 429s |",
             "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
         ]
         for name, s in e2e["frameworks"].items():
             cost = "—" if s.get("avg_cost_usd") is None else f"${s['avg_cost_usd']:.5f}"
+            answered = s["questions"] - s["errors"]
+            if s["judged"] < answered:  # never show a rate over a partly judged set
+                correct = faithful = f"pending ({s['judged']}/{answered} judged)"
+            else:
+                correct, faithful = _pct(s["correctness"]), _pct(s["faithfulness"])
             lines.append(
-                f"| {name} | {_pct(s['correctness'])} | {_pct(s['faithfulness'])} | {_pct(s['citation_precision'])} "
+                f"| {name} | {correct} | {faithful} | {_pct(s['citation_precision'])} "
                 f"| {_pct(s['tool_selection'])} | {_num(s['p50_latency_ms'])} / {_num(s['p95_latency_ms'])} ms "
                 f"| {_num(s['p50_overhead_ms'])} ms | {_num(s['avg_llm_calls'], 1)} "
                 f"| {_num(s['avg_input_tokens'])} / {_num(s['avg_output_tokens'])} | {_num(s['avg_request_chars'])} "
@@ -87,9 +95,14 @@ def markdown(summary: dict[str, Any]) -> str:
             cells = []
             for s in e2e["frameworks"].values():
                 b = s["by_category"].get(cat)
-                cells.append(
-                    "—" if b is None else f"{_pct(b['correctness'])} correct, {_pct(b['tool_selection'])} tool"
-                )
+                if b is None:
+                    cells.append("—")
+                elif b["judged"] < b["questions"] - b["errors"]:
+                    cells.append(f"{_pct(b['tool_selection'])} tool, {b['errors']} errors")
+                else:
+                    cells.append(
+                        f"{_pct(b['correctness'])} correct, {_pct(b['tool_selection'])} tool, {b['errors']} errors"
+                    )
             count = next(iter(e2e["frameworks"].values()))["by_category"][cat]["questions"]
             lines.append(f"| {cat} ({count}) | " + " | ".join(cells) + " |")
         lines.append("")

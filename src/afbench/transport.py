@@ -30,7 +30,7 @@ from typing import Any
 import httpx
 
 _DAILY_QUOTA = re.compile(r"per day|\(TPD\)|\(RPD\)", re.IGNORECASE)
-_TRY_AGAIN = re.compile(r"try again in ((?:\d+h)?(?:\d+m)?(?:[\d.]+s)?(?:[\d.]+ms)?)", re.IGNORECASE)
+_TRY_AGAIN = re.compile(r"try again in ([\d.hms]+)", re.IGNORECASE)
 _DURATION_PART = re.compile(r"([\d.]+)(ms|h|m|s)")
 
 
@@ -85,12 +85,16 @@ class MeteredTransport(httpx.AsyncBaseTransport):
         meter: Meter,
         inner: httpx.AsyncBaseTransport | None = None,
         max_wait_s: float = 300.0,
+        daily_wait_s: float = 0.0,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self.meter = meter
         self.inner = inner or httpx.AsyncHTTPTransport()
         self.max_wait_s = max_wait_s
+        # A rolling daily token window frees up as old usage ages out. Waits up to this long
+        # are waited out (the judge pass uses this); longer ones stop the run.
+        self.daily_wait_s = daily_wait_s
         self._sleep = sleep
         self._clock = clock
         self._budgets: dict[str, _Budget] = {}
@@ -117,11 +121,12 @@ class MeteredTransport(httpx.AsyncBaseTransport):
 
             self.meter.rate_limited += 1
             text = content.decode("utf-8", "replace")
-            if _DAILY_QUOTA.search(text):
+            wait = retry_after(response.headers, text)
+            daily = bool(_DAILY_QUOTA.search(text))
+            if daily and wait > self.daily_wait_s:
                 self.meter.quota_exhausted = text[:300]
                 return response
-            wait = retry_after(response.headers, text)
-            if waited + wait > self.max_wait_s:
+            if waited + wait > max(self.max_wait_s, self.daily_wait_s):
                 return response
             waited += wait
             self.meter.backoff_s += wait
@@ -190,5 +195,7 @@ def _rebuild(raw: httpx.Response, content: bytes, request: httpx.Request) -> htt
     return httpx.Response(raw.status_code, headers=headers, content=content, request=request)
 
 
-def metered_client(meter: Meter, inner: httpx.AsyncBaseTransport | None = None) -> httpx.AsyncClient:
-    return httpx.AsyncClient(transport=MeteredTransport(meter, inner), timeout=120)
+def metered_client(
+    meter: Meter, inner: httpx.AsyncBaseTransport | None = None, daily_wait_s: float = 0.0
+) -> httpx.AsyncClient:
+    return httpx.AsyncClient(transport=MeteredTransport(meter, inner, daily_wait_s=daily_wait_s), timeout=120)

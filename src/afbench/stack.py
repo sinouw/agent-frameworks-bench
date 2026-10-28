@@ -25,15 +25,16 @@ from afbench.embeddings import (
     CachedSparse,
     FastEmbedDense,
     FastEmbedSparse,
-    LangChainDense,
-    LangChainSparse,
-    LlamaIndexDense,
-    llamaindex_sparse_fns,
 )
 from afbench.frameworks import baseline, langgraph_impl, llamaindex_impl
 from afbench.transport import Meter, metered_client
 
 FRAMEWORKS = ("baseline", "langgraph", "llamaindex")
+
+# Groq's free tier caps tokens per model over a rolling 24 h window, shared here with other
+# work on the same key. Short waits for old usage to age out are waited out (and recorded
+# as waiting, not latency); longer ones stop the run, which then resumes on rerun.
+DAILY_WAIT_S = 1800.0
 
 # The variants used by the end-to-end agents: identical candidate pool, fusion and BM25
 # weighting across frameworks. The defaults are measured too, in the retrieval eval.
@@ -81,8 +82,8 @@ def build_indexes(settings: Settings) -> dict[str, Any]:
         for collection, idf in (("docs", False), ("docs_idf", True)):
             store = langgraph_impl.build_index(
                 chunks,
-                LangChainDense(cache),
-                LangChainSparse(sparse),
+                langgraph_impl.LangChainDense(cache),
+                langgraph_impl.LangChainSparse(sparse),
                 collection,
                 idf=idf,
                 path=str(settings.index_dir / "langchain"),
@@ -91,9 +92,9 @@ def build_indexes(settings: Settings) -> dict[str, Any]:
 
     def run_llamaindex() -> None:
         client = QdrantClient(path=str(settings.index_dir / "llamaindex"))
-        doc_fn, query_fn = llamaindex_sparse_fns(sparse, query_side=True)
+        doc_fn, query_fn = llamaindex_impl.sparse_fns(sparse, query_side=True)
         store = llamaindex_impl.vector_store(client, "docs", doc_fn, query_fn)
-        llamaindex_impl.build_index(chunks, store, LlamaIndexDense(cache))
+        llamaindex_impl.build_index(chunks, store, llamaindex_impl.LlamaIndexDense(cache))
         client.close()
 
     timed("baseline: write index", run_baseline)
@@ -113,15 +114,15 @@ def open_searchers(settings: Settings) -> dict[str, Searcher]:
 
     bl_client = QdrantClient(path=str(index_dir / "baseline"))
     lc_client = QdrantClient(path=str(index_dir / "langchain"))
-    lc_dense, lc_sparse = LangChainDense(cache), LangChainSparse(sparse)
+    lc_dense, lc_sparse = langgraph_impl.LangChainDense(cache), langgraph_impl.LangChainSparse(sparse)
     lc_default = langgraph_impl.open_store(lc_client, "docs", lc_dense, lc_sparse)
     lc_idf = langgraph_impl.open_store(lc_client, "docs_idf", lc_dense, lc_sparse)
 
     li_client = QdrantClient(path=str(index_dir / "llamaindex"))
-    li_embed = LlamaIndexDense(cache)
+    li_embed = llamaindex_impl.LlamaIndexDense(cache)
 
     def li_index(query_side: bool, rrf: bool) -> VectorStoreIndex:
-        doc_fn, query_fn = llamaindex_sparse_fns(sparse, query_side)
+        doc_fn, query_fn = llamaindex_impl.sparse_fns(sparse, query_side)
         fusion = llamaindex_impl.rrf_fusion if rrf else None
         store = llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn, fusion)
         return VectorStoreIndex.from_vector_store(store, embed_model=li_embed)
@@ -166,7 +167,12 @@ def build_bench(
     agents: dict[str, QAAgent] = {}
     # SDK retries are off everywhere: the metered transport handles 429s identically for all.
     if "baseline" in frameworks:
-        client = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner))
+        client = AsyncOpenAI(
+            api_key=key,
+            base_url=url,
+            max_retries=0,
+            http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),
+        )
         agents["baseline"] = baseline.BaselineAgent(client, model, searchers[MATCHED["baseline"]], sql, **common)
     if "langgraph" in frameworks:
         chat = ChatOpenAI(
@@ -175,7 +181,7 @@ def build_bench(
             base_url=url,
             temperature=0.0,
             max_retries=0,
-            http_async_client=metered_client(meter, inner),
+            http_async_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),
         )
         agents["langgraph"] = langgraph_impl.LangGraphAgent(chat, searchers[MATCHED["langgraph"]], sql, **common)
     if "llamaindex" in frameworks:
@@ -189,10 +195,12 @@ def build_bench(
             is_chat_model=True,
             is_function_calling_model=True,
             context_window=131_072,
-            async_http_client=metered_client(meter, inner),  # type: ignore[call-arg]
+            async_http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S),  # type: ignore[call-arg]
         )
         agents["llamaindex"] = llamaindex_impl.LlamaIndexAgent(llm, searchers[MATCHED["llamaindex"]], sql, **common)
-    judge = AsyncOpenAI(api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner))
+    judge = AsyncOpenAI(
+        api_key=key, base_url=url, max_retries=0, http_client=metered_client(meter, inner, daily_wait_s=DAILY_WAIT_S)
+    )
     return Bench(meter, agents, judge)
 
 

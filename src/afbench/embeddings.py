@@ -2,15 +2,9 @@
 
 The corpus is embedded a single time (fastembed `bge-small-en-v1.5` dense + `Qdrant/bm25`
 sparse, both ONNX on CPU) and cached under `data/index/embeddings/`. Each framework then
-indexes from that cache through a small adapter for its own embedding interface, and at
-query time all three share one model instance. Vectors are identical by construction and
-the laptop holds one copy of each model.
-
-The adapters reproduce what each library's own fastembed integration does (read from
-`langchain_qdrant.FastEmbedSparse` and `llama_index.vector_stores.qdrant.utils`):
-LangChain encodes BM25 queries with `query_embed`; LlamaIndex's built-in encoder uses
-the document-side `embed` for queries too. `llamaindex_sparse_fns(query_side=False)`
-keeps that default so it can be measured.
+indexes from that cache through a small adapter for its own embedding interface (in its
+own module), and at query time all three share one model instance. Vectors are identical
+by construction and the laptop holds one copy of each model.
 
 Hashing embedders at the bottom keep the tests offline.
 """
@@ -23,14 +17,9 @@ import math
 import re
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Protocol
 
 import numpy as np
-from langchain_core.embeddings import Embeddings
-from langchain_qdrant import SparseEmbeddings
-from langchain_qdrant import SparseVector as LCSparseVector
-from llama_index.core.base.embeddings.base import BaseEmbedding
-from pydantic import PrivateAttr
 
 SparseVector = tuple[list[int], list[float]]
 SparseFn = Callable[[list[str]], tuple[list[list[int]], list[list[float]]]]
@@ -149,68 +138,6 @@ class CachedSparse:
 
     def embed_document_side(self, text: str) -> SparseVector:
         return self.cache.sparse.embed_document_side(text)
-
-
-# ---------------------------------------------------------------- framework adapters
-
-
-class LangChainDense(Embeddings):
-    def __init__(self, embedder: DenseEmbedder) -> None:
-        self.embedder = embedder
-
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        return self.embedder.embed_documents(texts)
-
-    def embed_query(self, text: str) -> list[float]:
-        return self.embedder.embed_query(text)
-
-
-class LangChainSparse(SparseEmbeddings):
-    def __init__(self, embedder: SparseEmbedder) -> None:
-        self.embedder = embedder
-
-    def embed_documents(self, texts: list[str]) -> list[LCSparseVector]:
-        return [LCSparseVector(indices=i, values=v) for i, v in self.embedder.embed_documents(texts)]
-
-    def embed_query(self, text: str) -> LCSparseVector:
-        indices, values = self.embedder.embed_query(text)
-        return LCSparseVector(indices=indices, values=values)
-
-
-class LlamaIndexDense(BaseEmbedding):
-    _embedder: Any = PrivateAttr()
-
-    def __init__(self, embedder: DenseEmbedder, **kwargs: Any) -> None:
-        super().__init__(model_name="shared", embed_batch_size=256, **kwargs)
-        self._embedder = embedder
-
-    def _get_text_embedding(self, text: str) -> list[float]:
-        return list(self._embedder.embed_documents([text])[0])
-
-    def _get_text_embeddings(self, texts: list[str]) -> list[list[float]]:
-        return list(self._embedder.embed_documents(texts))
-
-    def _get_query_embedding(self, query: str) -> list[float]:
-        return list(self._embedder.embed_query(query))
-
-    async def _aget_query_embedding(self, query: str) -> list[float]:
-        return self._get_query_embedding(query)
-
-
-def llamaindex_sparse_fns(embedder: SparseEmbedder, query_side: bool) -> tuple[SparseFn, SparseFn]:
-    """(document fn, query fn) in the shape LlamaIndex's Qdrant store expects.
-    `query_side=False` reproduces the library default (document-side encoding for queries)."""
-
-    def docs(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
-        vectors = embedder.embed_documents(texts)
-        return [v[0] for v in vectors], [v[1] for v in vectors]
-
-    def queries(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
-        encode = embedder.embed_query if query_side else embedder.embed_document_side
-        vectors = [encode(t) for t in texts]
-        return [v[0] for v in vectors], [v[1] for v in vectors]
-
-    return docs, queries
 
 
 # ---------------------------------------------------------------- offline test embedders

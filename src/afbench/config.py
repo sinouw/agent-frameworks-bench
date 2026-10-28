@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     # One OpenAI-compatible endpoint serves all three implementations (Groq by default).
     llm_base_url: str = "https://api.groq.com/openai/v1"
     groq_api_key: SecretStr | None = None
-    answer_model: str = "openai/gpt-oss-20b"
+    answer_model: str = "openai/gpt-oss-120b"
     # The judge is a different model family from the answering model.
     judge_model: str = "qwen/qwen3.8-27b"
 

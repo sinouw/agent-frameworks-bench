@@ -2,6 +2,7 @@
 the metered transport. No network, no API key."""
 
 import pytest
+from pydantic import SecretStr
 
 from afbench.config import Settings
 from afbench.stack import MATCHED, build_bench
@@ -14,7 +15,7 @@ URL = "https://llm.test/v1"
 def make_agent(framework, backend: ScriptedBackend, meter: Meter, searcher: StubSearcher, db, max_steps: int = 5):
     """Agents built by the production wiring, talking to the scripted backend."""
     settings = Settings(
-        groq_api_key="test", llm_base_url=URL, answer_model="test-model", sqlite_path=db, max_steps=max_steps
+        groq_api_key=SecretStr("test"), llm_base_url=URL, answer_model="test-model", sqlite_path=db, max_steps=max_steps
     )
     bench = build_bench(settings, dict.fromkeys(MATCHED.values(), searcher), (framework,), backend.transport())
     bench.meter.calls = meter.calls  # share the call log with the caller

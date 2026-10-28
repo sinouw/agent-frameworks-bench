@@ -7,8 +7,9 @@
   faithfulness. Tool selection, citations, tokens, latency and back-off come from the
   metered transport, so they are measured the same way for every framework.
 
-Rows are appended to `results/e2e/<run>.jsonl` as they finish, so an interrupted run
-(for example on a provider's daily quota) resumes where it stopped.
+Answering and judging are separate resumable passes: rows are appended to
+`results/e2e/<run>.jsonl` as they finish, and the latest row per (framework, question)
+wins. A provider quota that runs out mid-run therefore costs nothing already done.
 """
 
 from __future__ import annotations
@@ -26,25 +27,25 @@ from openai import AsyncOpenAI
 from afbench.common import AgentResult, QAAgent, Searcher
 from afbench.transport import Meter
 
-JUDGE_PROMPT = """You are grading an AI assistant's answer to a question about a document collection.
+JUDGE_PROMPT = """You are grading a question-answering agent's answer to a question about a document collection.
 
 Question: {question}
 
 Reference answer (ground truth): {reference}
 
-Assistant's answer: {answer}
+Agent's answer: {answer}
 
-Context the assistant retrieved with its tools:
+Context the agent retrieved with its tools:
 <context>
 {context}
 </context>
 
 Grade two things independently:
-1. correct: does the assistant's answer agree in substance with the reference answer? Extra correct
+1. correct: does the agent's answer agree in substance with the reference answer? Extra correct
    detail is fine; missing the key fact, or contradicting it, is not. If the reference says the
-   documents do not contain the answer, the assistant is correct only if it declines or says the
+   documents do not contain the answer, the agent is correct only if it declines or says the
    documents don't say, rather than inventing an answer.
-2. faithful: is every factual claim in the assistant's answer supported by the context above?
+2. faithful: is every factual claim in the agent's answer supported by the context above?
    An answer that only says the information isn't available is faithful.
 
 Reply with JSON only: {{"correct": true|false, "faithful": true|false, "reason": "<one sentence>"}}"""
@@ -72,7 +73,7 @@ def load_golden(path: Path) -> list[GoldenItem]:
     return [GoldenItem(**json.loads(line)) for line in path.read_text().splitlines() if line.strip()]
 
 
-def select_subset(items: list[GoldenItem], lookups_per_difficulty: int = 5, per_category: int = 3) -> list[GoldenItem]:
+def select_subset(items: list[GoldenItem], lookups_per_difficulty: int = 3, per_category: int = 2) -> list[GoldenItem]:
     """A fixed, rule-based subset for the rate-limited end-to-end run: the first
     `lookups_per_difficulty` lookup questions of each difficulty and the first
     `per_category` questions of every other category, in golden-file order."""
@@ -245,63 +246,81 @@ def load_rows(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
     return rows
 
 
+def _answered(row: dict[str, Any] | None) -> bool:
+    return bool(row) and not (row or {}).get("error")
+
+
+def _final(row: dict[str, Any] | None) -> bool:
+    """Answered, or failed for a reason that is part of the result (step budget, request too
+    large). Only rate-limit failures are retried on resume."""
+    return bool(row) and not str((row or {}).get("error") or "").startswith("RateLimitError")
+
+
 def _done(row: dict[str, Any] | None) -> bool:
-    return bool(row) and not (row or {}).get("error") and (row or {}).get("correct") is not None
+    return _answered(row) and (row or {}).get("correct") is not None
 
 
-async def run_e2e(
-    agents: dict[str, QAAgent],
-    judge: AsyncOpenAI,
-    meter: Meter,
-    items: list[GoldenItem],
-    answer_model: str,
-    judge_model: str,
-    out_path: Path,
+def _append(path: Path, row: dict[str, Any]) -> None:
+    with path.open("a") as fh:
+        fh.write(json.dumps(row) + "\n")
+
+
+async def answer_all(
+    agents: dict[str, QAAgent], meter: Meter, items: list[GoldenItem], answer_model: str, out_path: Path
 ) -> bool:
-    """Run every (question, framework) pair not already done. Returns False if a provider's
-    daily quota stopped the run."""
+    """Answer every (question, framework) pair not already answered, one at a time. The
+    framework order rotates per question. Returns False if the answer model's daily quota
+    stopped the run; rerunning resumes."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     existing = load_rows(out_path)
     names = list(agents)
     for index, item in enumerate(items):
         order = names[index % len(names) :] + names[: index % len(names)]
         for framework in order:
-            previous = existing.get((framework, item.id))
-            if _done(previous):
+            if _final(existing.get((framework, item.id))):
                 continue
-            if previous and not previous.get("error") and previous.get("answer") is not None:
-                row = previous  # answered earlier, only the judge verdict is missing
-            else:
-                meter.reset()
-                started = time.perf_counter()
-                result = await agents[framework].answer(item.question)
-                wall_ms = (time.perf_counter() - started) * 1000
-                row = agent_row(item, framework, result, meter, answer_model, wall_ms)
-                if meter.quota_exhausted:
-                    print(f"daily quota exhausted during {framework} {item.id}; stopping. Resume later.")
-                    return False
-            if not row["error"]:
-                meter.reset()
-                try:
-                    verdict = await judge_answer(judge, judge_model, item, row["answer"], row["tools"])
-                except Exception as exc:  # judge failures leave the verdict empty for a later resume
-                    verdict = {"correct": None, "faithful": None, "reason": f"judge error: {type(exc).__name__}"}
-                row.update(verdict)
-                row["judge_input_tokens"] = sum(c.input_tokens for c in meter.for_model(judge_model))
-                row["judge_output_tokens"] = sum(c.output_tokens for c in meter.for_model(judge_model))
-            else:
-                row.update({"correct": False, "faithful": None, "reason": "agent error"})
-            with out_path.open("a") as fh:
-                fh.write(json.dumps(row) + "\n")
-            existing[(framework, item.id)] = row
-            mark = "ok " if row.get("correct") else "ERR" if row["error"] else "x  "
-            print(
-                f"  {mark} {framework:<10} {item.id} {item.category:<13} {row['latency_ms']:>6} ms "
-                f"(+{row['wait_ms']} ms waiting) {row['input_tokens']}/{row['output_tokens']} tok"
-            )
+            meter.reset()
+            started = time.perf_counter()
+            result = await agents[framework].answer(item.question)
+            wall_ms = (time.perf_counter() - started) * 1000
             if meter.quota_exhausted:
-                print("daily quota exhausted (judge); stopping. Resume later.")
+                print(f"daily quota of {answer_model} exhausted during {framework} {item.id}; rerun later to resume.")
                 return False
+            row = agent_row(item, framework, result, meter, answer_model, wall_ms)
+            row.update({"correct": None, "faithful": None, "reason": None})
+            if row["error"]:
+                row.update({"correct": False, "reason": "agent error"})
+            _append(out_path, row)
+            existing[(framework, item.id)] = row
+            print(
+                f"  {'ERR' if row['error'] else 'ok '} {framework:<10} {item.id} {item.category:<13} "
+                f"{row['latency_ms']:>6} ms (+{row['wait_ms']} ms waiting) {row['input_tokens']}/{row['output_tokens']} tok"
+            )
+    return True
+
+
+async def judge_all(
+    judge: AsyncOpenAI, meter: Meter, items: list[GoldenItem], judge_model: str, out_path: Path
+) -> bool:
+    """Grade every answered row that has no verdict yet. Returns False if the judge's quota
+    stopped the pass; rerunning resumes."""
+    by_id = {i.id: i for i in items}
+    for (framework, qid), row in load_rows(out_path).items():
+        if not _answered(row) or _done(row) or qid not in by_id:
+            continue
+        meter.reset()
+        try:
+            verdict = await judge_answer(judge, judge_model, by_id[qid], row["answer"], row["tools"])
+        except Exception as exc:  # leave the verdict empty for a later pass
+            print(f"  judge failed on {framework} {qid}: {type(exc).__name__}; rerun later to resume.")
+            return False
+        calls = meter.for_model(judge_model)
+        row.update(verdict)
+        row["judge_input_tokens"] = sum(c.input_tokens for c in calls)
+        row["judge_output_tokens"] = sum(c.output_tokens for c in calls)
+        row["judge_wait_ms"] = round((meter.throttle_s + meter.backoff_s) * 1000)
+        _append(out_path, row)
+        print(f"  {'ok ' if row['correct'] else 'x  '} {framework:<10} {qid} {verdict['reason'][:90]}")
     return True
 
 
@@ -329,6 +348,7 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     over = [r["overhead_ms"] for r in ok]
     return {
         "questions": len(rows),
+        "judged": sum(1 for r in rows if r.get("correct") is not None and not r.get("error")),
         "correctness": _rate(rows, "correct"),
         "faithfulness": _rate(ok, "faithful"),
         "citation_precision": _mean(ok, "citation_precision"),
@@ -347,21 +367,36 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+EFFICIENCY_KEYS = (
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "p50_overhead_ms",
+    "avg_llm_calls",
+    "avg_input_tokens",
+    "avg_output_tokens",
+    "avg_request_chars",
+)
+
+
 def summarize_run(rows: dict[tuple[str, str], dict[str, Any]], frameworks: list[str]) -> dict[str, Any]:
-    """Only questions answered and judged for every framework count, so all columns
-    cover the same questions."""
+    """Only questions with a final row for every framework count, so all columns cover the
+    same questions. Correctness and faithfulness cover the judged rows (agent errors count as
+    incorrect); until the judge pass has run they are reported as pending."""
     ids = sorted({qid for _, qid in rows})
-    paired = [
-        q for q in ids if all(_done(rows.get((f, q))) or (rows.get((f, q)) or {}).get("error") for f in frameworks)
-    ]
-    out: dict[str, Any] = {"paired_questions": paired, "frameworks": {}}
+    paired = [q for q in ids if all(_final(rows.get((f, q))) for f in frameworks)]
+    # Latency, tokens and cost compare like with like: only questions every framework answered
+    # without an error (a failed run that stopped early would otherwise look cheap).
+    common = [q for q in paired if all(not rows[(f, q)].get("error") for f in frameworks)]
+    out: dict[str, Any] = {"paired_questions": paired, "efficiency_questions": common, "frameworks": {}}
     for f in frameworks:
         frows = [rows[(f, q)] for q in paired]
         cats: dict[str, list[dict[str, Any]]] = {}
         for r in frows:
             cats.setdefault(r["category"], []).append(r)
+        efficiency = summarize([rows[(f, q)] for q in common])
         out["frameworks"][f] = {
             **summarize(frows),
+            **{k: efficiency[k] for k in EFFICIENCY_KEYS},
             "by_category": {c: summarize(g) for c, g in sorted(cats.items())},
             "by_difficulty": {d: summarize([r for r in frows if r["difficulty"] == d]) for d in ("core", "hard")},
         }

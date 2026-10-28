@@ -11,7 +11,7 @@ from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseChatModel
 from langchain_core.tools import StructuredTool
-from langchain_qdrant import QdrantVectorStore, RetrievalMode, SparseEmbeddings
+from langchain_qdrant import QdrantVectorStore, RetrievalMode, SparseEmbeddings, SparseVector
 from langgraph.errors import GraphRecursionError
 from qdrant_client import QdrantClient, models
 
@@ -30,6 +30,35 @@ from afbench.common import (
     sql_description,
 )
 from afbench.corpus import Chunk
+from afbench.embeddings import DenseEmbedder, SparseEmbedder
+
+
+class LangChainDense(Embeddings):
+    """The shared embedder behind LangChain's interface (replaces `FastEmbedEmbeddings`,
+    which lives in the sunset `langchain-community` package)."""
+
+    def __init__(self, embedder: DenseEmbedder) -> None:
+        self.embedder = embedder
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return self.embedder.embed_documents(texts)
+
+    def embed_query(self, text: str) -> list[float]:
+        return self.embedder.embed_query(text)
+
+
+class LangChainSparse(SparseEmbeddings):
+    """Same behaviour as `langchain_qdrant.FastEmbedSparse`: BM25 queries use `query_embed`."""
+
+    def __init__(self, embedder: SparseEmbedder) -> None:
+        self.embedder = embedder
+
+    def embed_documents(self, texts: list[str]) -> list[SparseVector]:
+        return [SparseVector(indices=i, values=v) for i, v in self.embedder.embed_documents(texts)]
+
+    def embed_query(self, text: str) -> SparseVector:
+        indices, values = self.embedder.embed_query(text)
+        return SparseVector(indices=indices, values=values)
 
 
 def build_index(

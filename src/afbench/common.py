@@ -246,6 +246,14 @@ class SqlTool:
 
 # ---------------------------------------------------------------- results
 
+# Provider errors can echo account ids or (masked) keys back; keep them out of stored results.
+_SECRET_LIKE = re.compile(r"\b(?:gsk_|sk-|AIza)[A-Za-z0-9_\-*]{6,}|\b(?:org|proj|user)_[A-Za-z0-9]{8,}")
+
+
+def redact(text: str) -> str:
+    return _SECRET_LIKE.sub("[redacted]", text)
+
+
 _CITATION_GROUP = re.compile(r"\[([^\[\]]+)\]")
 _LABEL = re.compile(r"\bS\d+\b")
 
@@ -317,6 +325,8 @@ class ToolBox:
         return output
 
     def result(self, answer: str, error: str | None = None) -> AgentResult:
+        if error:
+            error = redact(error)
         answer = normalize_citations(answer.strip())
         cited = [
             self.registry.by_label[label]

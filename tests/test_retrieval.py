@@ -12,10 +12,6 @@ from afbench.embeddings import (
     CachedSparse,
     HashEmbedder,
     HashSparseEmbedder,
-    LangChainDense,
-    LangChainSparse,
-    LlamaIndexDense,
-    llamaindex_sparse_fns,
 )
 from afbench.frameworks import baseline, langgraph_impl, llamaindex_impl
 from tests.conftest import CORPUS_DIR
@@ -32,12 +28,19 @@ def _searchers(chunks) -> dict[str, Any]:
     client = QdrantClient(":memory:")
     baseline.build_index(client, "docs", chunks, DENSE, SPARSE)
     lc_store = langgraph_impl.build_index(
-        chunks, LangChainDense(DENSE), LangChainSparse(SPARSE), "docs", idf=True, location=":memory:"
+        chunks,
+        langgraph_impl.LangChainDense(DENSE),
+        langgraph_impl.LangChainSparse(SPARSE),
+        "docs",
+        idf=True,
+        location=":memory:",
     )
     li_client = QdrantClient(":memory:")
-    doc_fn, query_fn = llamaindex_sparse_fns(SPARSE, query_side=True)
+    doc_fn, query_fn = llamaindex_impl.sparse_fns(SPARSE, query_side=True)
     li_index = llamaindex_impl.build_index(
-        chunks, llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn), LlamaIndexDense(DENSE)
+        chunks,
+        llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn),
+        llamaindex_impl.LlamaIndexDense(DENSE),
     )
     rrf_store = llamaindex_impl.vector_store(li_client, "docs", doc_fn, query_fn, fusion=llamaindex_impl.rrf_fusion)
     return {
@@ -45,7 +48,8 @@ def _searchers(chunks) -> dict[str, Any]:
         "langchain": langgraph_impl.LangChainSearcher(lc_store, candidates=20),
         "llamaindex": llamaindex_impl.LlamaIndexSearcher(li_index),
         "llamaindex-rrf": llamaindex_impl.LlamaIndexSearcher(
-            VectorStoreIndex.from_vector_store(rrf_store, embed_model=LlamaIndexDense(DENSE)), candidates=20
+            VectorStoreIndex.from_vector_store(rrf_store, embed_model=llamaindex_impl.LlamaIndexDense(DENSE)),
+            candidates=20,
         ),
     }
 
@@ -93,7 +97,7 @@ def test_embedding_cache_round_trips_and_is_used(tmp_path):
 
 
 def test_llamaindex_default_encodes_queries_document_side():
-    _, default_query = llamaindex_sparse_fns(SPARSE, query_side=False)
-    _, query_side = llamaindex_sparse_fns(SPARSE, query_side=True)
+    _, default_query = llamaindex_impl.sparse_fns(SPARSE, query_side=False)
+    _, query_side = llamaindex_impl.sparse_fns(SPARSE, query_side=True)
     assert default_query(["pip pip"])[1] == [[2.0]]
     assert query_side(["pip pip"])[1] == [[1.0]]

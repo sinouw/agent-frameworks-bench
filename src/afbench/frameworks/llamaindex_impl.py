@@ -15,6 +15,7 @@ from llama_index.core.schema import TextNode
 from llama_index.core.tools import BaseTool, FunctionTool
 from llama_index.core.vector_stores.types import VectorStoreQueryResult
 from llama_index.vector_stores.qdrant import QdrantVectorStore
+from pydantic import PrivateAttr
 from qdrant_client import QdrantClient, models
 from qdrant_client.hybrid.fusion import DEFAULT_RANKING_CONSTANT_K
 
@@ -33,7 +34,46 @@ from afbench.common import (
     sql_description,
 )
 from afbench.corpus import Chunk
-from afbench.embeddings import SparseFn
+from afbench.embeddings import DenseEmbedder, SparseEmbedder, SparseFn
+
+
+class LlamaIndexDense(BaseEmbedding):
+    """The shared embedder behind LlamaIndex's interface."""
+
+    _embedder: Any = PrivateAttr()
+
+    def __init__(self, embedder: DenseEmbedder, **kwargs: Any) -> None:
+        super().__init__(model_name="shared", embed_batch_size=256, **kwargs)
+        self._embedder = embedder
+
+    def _get_text_embedding(self, text: str) -> list[float]:
+        return list(self._embedder.embed_documents([text])[0])
+
+    def _get_text_embeddings(self, texts: list[str]) -> list[list[float]]:
+        return list(self._embedder.embed_documents(texts))
+
+    def _get_query_embedding(self, query: str) -> list[float]:
+        return list(self._embedder.embed_query(query))
+
+    async def _aget_query_embedding(self, query: str) -> list[float]:
+        return self._get_query_embedding(query)
+
+
+def sparse_fns(embedder: SparseEmbedder, query_side: bool) -> tuple[SparseFn, SparseFn]:
+    """(document fn, query fn) in the shape the Qdrant store expects. `query_side=False`
+    reproduces the library's built-in fastembed encoder, which encodes queries with the
+    document-side `embed` instead of `query_embed`."""
+
+    def docs(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
+        vectors = embedder.embed_documents(texts)
+        return [v[0] for v in vectors], [v[1] for v in vectors]
+
+    def queries(texts: list[str]) -> tuple[list[list[int]], list[list[float]]]:
+        encode = embedder.embed_query if query_side else embedder.embed_document_side
+        vectors = [encode(t) for t in texts]
+        return [v[0] for v in vectors], [v[1] for v in vectors]
+
+    return docs, queries
 
 
 def vector_store(
